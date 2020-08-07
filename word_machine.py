@@ -47,6 +47,16 @@ def open_dictionary(filename="dictionary.txt"):
         dictionary.remove('')
     return dictionary
 
+def get_alphabet_from_dict(dictionary):
+    alphabet = []
+    for word in dictionary:
+        for letter in word:
+            if not letter in alphabet:
+                alphabet.append(letter)
+
+    alphabet.insert(0, '')
+    return list(sorted(set(alphabet)))
+
 def write_clean_dictionary(dictionary, filename="output_dictionary.txt"):
     f = open(filename, 'w')
     for word in dictionary:
@@ -155,9 +165,13 @@ def plot_2D_matrix(matrix, alphabet):
         print (line, matrix[line])
         print ('')
 
-def generate_word_2D(matrix, alphabet):
-    word = ''
-    previous_letter = ''
+def generate_word_2D(matrix, alphabet, prefix):
+    if prefix == False:
+        word = ''
+        previous_letter = ''
+    else:
+        word = prefix
+        previous_letter = prefix[-1]
     new_letter = None
     while new_letter != '':
         new_letter = choices(population=alphabet, weights=matrix[previous_letter].values(), k=1)[0]
@@ -236,17 +250,11 @@ if __name__ == '__main__':
 
     arg_list = ['-alpha', '-dict', '-write', '-gen', '-force', '-low-case', \
                 '-size', '-no-acronyms', '-output', '-prefix', '-no-plural', \
-                '-new','-print-acronyms', '-print-plural']
+                '-new','-print-acronyms', '-print-plural', '-dim', '-capitalize']
 
     for arg in sys.argv:
         if arg[0] == '-' and not arg in arg_list:
             print ("Error: unrecognized argument", arg)
-
-    # getting alphabet
-    if '-alpha' in sys.argv:
-        alphabet = open_alphabet(get_option ('-alpha', True))
-    else:
-        alphabet = open_alphabet()
 
     # getting dictionary
     if '-dict' in sys.argv:
@@ -271,13 +279,20 @@ if __name__ == '__main__':
     if '-no-plural' in sys.argv:
         dictionary = remove_plural_words(dictionary, get_option('-no-plural', True))
 
-    missing_letters = get_missing_letters(dictionary, alphabet)
-    if '-force' in sys.argv:
-        dictionary = remove_unknown_letters (dictionary, missing_letters)
+    # getting alphabet
+    if '-alpha' in sys.argv:
+        alphabet = open_alphabet(get_option ('-alpha', True))
+        missing_letters = get_missing_letters(dictionary, alphabet)
+        if '-force' in sys.argv:
+            dictionary = remove_unknown_letters (dictionary, missing_letters)
+        else:
+            if missing_letters != []:
+                print ('WARNING: Some characters are used in the dictionary without being in the alphabet')
+                print (missing_letters)
     else:
-        if missing_letters != []:
-            print ('WARNING: Some characters are used in the dictionary without being in the alphabet')
-            print (missing_letters)
+        alphabet = get_alphabet_from_dict (dictionary)
+
+
 
     if '-write' in sys.argv:
         filename = get_option('-write', False)
@@ -292,8 +307,13 @@ if __name__ == '__main__':
         # plot_2D_matrix(matrix_2D, alphabet)
 
     if '-gen' in sys.argv:
-        matrix_3D = initiate_empty_3D_matrix(alphabet)
-        build_3D_matrix(matrix_3D, dictionary)
+
+        if '-dim' in sys.argv and get_option('-dim', True) == '2':
+            matrix = initiate_empty_2D_matrix(alphabet)
+            build_2D_matrix(matrix, dictionary)
+        else:
+            matrix = initiate_empty_3D_matrix(alphabet)
+            build_3D_matrix(matrix, dictionary)
 
         output_file = '-output' in sys.argv
         word_list = ""
@@ -310,7 +330,12 @@ if __name__ == '__main__':
 
         i = 0
         while i != int(get_option('-gen', True)):
-            word = generate_word_3D(matrix_3D, alphabet, prefix)
+            if '-dim' in sys.argv and get_option('-dim', True) == '2':
+                word = generate_word_2D(matrix, alphabet, prefix)
+            else:
+                word = generate_word_3D(matrix, alphabet, prefix)
+            if '-capitalize' in sys.argv:
+                word = word.capitalize()
             if (required_size == False or len(word) == required_size) \
             and not (new_only and word in dictionary):
                 if output_file:

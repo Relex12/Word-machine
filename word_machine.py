@@ -4,21 +4,22 @@ from random import choices
 # 2 dimensions matrix, only one letter before #
 ###############################################
 
-def initiate_empty_2D_matrix(alphabet):
+def build_2D_matrix(dictionary, alphabet):
+    # initiate matrix
     matrix = dict()
     for letter in alphabet:
         matrix[letter] = dict()
         for other_letter in alphabet:
             matrix[letter][other_letter] = 0
-    return matrix
 
-def build_2D_matrix(matrix, dictionary):
+    # fill matrix with dictionary
     for word in dictionary:
         previous_letter = ''
         for current_letter in word:
             matrix[previous_letter][current_letter] += 1
             previous_letter = current_letter
         matrix[word[len(word)-1]][''] +=1
+    return matrix
 
 # def plot_2D_matrix(matrix, alphabet):
 #     print (alphabet)
@@ -44,7 +45,8 @@ def generate_word_2D(matrix, alphabet, prefix):
 # 3 dimensions matrix, two letters before #
 ###########################################
 
-def initiate_empty_3D_matrix(alphabet):
+def build_3D_matrix(dictionary, alphabet):
+    # initiate matrix
     matrix = dict()
     for letter1 in alphabet:
         matrix[letter1] = dict()
@@ -52,9 +54,8 @@ def initiate_empty_3D_matrix(alphabet):
             matrix[letter1][letter2] = dict()
             for letter3 in alphabet:
                 matrix[letter1][letter2][letter3] = 0
-    return matrix
 
-def build_3D_matrix(matrix, dictionary):
+    # fill matrix with dictionary
     for word in dictionary:
         previous_letter1 = ''
         previous_letter2 = ''
@@ -64,6 +65,7 @@ def build_3D_matrix(matrix, dictionary):
             previous_letter2 = current_letter
         matrix[word[len(word)-2]][word[len(word)-1]][''] +=1
         matrix[word[len(word)-1]][''][''] +=1
+    return matrix
 
 def generate_word_3D(matrix, alphabet, prefix):
     if prefix == False:

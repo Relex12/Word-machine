@@ -117,11 +117,10 @@ if __name__ == '__main__':
         if '--generate' in sys.argv or '-g' in sys.argv :
 
             if '--dim' in sys.argv and get_option_value('--dim') == '2':
-                matrix = initiate_empty_2D_matrix(alphabet)
-                build_2D_matrix(matrix, dictionary)
+                matrix = build_2D_matrix(dictionary, alphabet)
             else:
-                matrix = initiate_empty_3D_matrix(alphabet)
-                build_3D_matrix(matrix, dictionary)
+                matrix = build_3D_matrix(dictionary, alphabet)
+
 
             output_file = '--output' in sys.argv
             word_list = ""

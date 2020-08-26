@@ -1,0 +1,40 @@
+usage: word-machine [OPTION]
+
+Generate words randomly from a statistical analysis of an input dictionary.
+
+----------- Input and output options ----------
+  -d, --dict FILE       specify the dictionary file.
+  --alpha FILE          specify the alphabet file (alphabet is deduced from the
+                         dictionary if not specified).
+  --write FILE          write the processed dictionary in the specified file.
+  --output FILE         write generated words in the specified file.
+
+----------- Dictionary processing options ----------
+  --force               remove from the dictionary every word with at least
+                         one letter not in the alphabet (ignored is --alpha
+                         is absent).
+  --low-case            lowercase every word from the dictionary.
+  --print-acronyms      print acronyms from the dictionary to stdout.
+  --print-plural LANG   print to sdout the plural words whose singular is in
+                         the dictionary (depends on the language, only FR is
+                         available yet).
+  --no-acronyms         remove acronyms from the dictionary.
+  --no-plural LANG      remove plural words from the dictionary.
+
+----------- Word generation options ----------
+  -g, --generate NUM    generate as many words as specified (option required
+                         for every option below).
+  --dim NUM             use the specified dimension for the matrix (between 2
+                         and 3).
+  --capitalize          capitalize generated words.
+  -s, --size SIZE       specify the length of generated words. SIZE can be
+                         NUM      (equals)
+                         NUM:     (less than)
+                         :NUM     (more than).
+                         NUM:NUM  (between)
+  --prefix              specify a prefix for
+  --new                 generate words that are not in the dictionary.
+
+----------- Miscellaneous options ----------
+  --help                print this help and exit.
+  --version             print version and exit.

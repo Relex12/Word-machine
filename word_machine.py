@@ -20,11 +20,11 @@ def build_2D_matrix(matrix, dictionary):
             previous_letter = current_letter
         matrix[word[len(word)-1]][''] +=1
 
-def plot_2D_matrix(matrix, alphabet):
-    print (alphabet)
-    for line in matrix:
-        print (line, matrix[line])
-        print ('')
+# def plot_2D_matrix(matrix, alphabet):
+#     print (alphabet)
+#     for line in matrix:
+#         print (line, matrix[line])
+#         print ('')
 
 def generate_word_2D(matrix, alphabet, prefix):
     if prefix == False:

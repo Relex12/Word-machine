@@ -52,16 +52,17 @@ def get_option_value(option, shorter=None, mandatory=True):
         position = sys.argv.index(option) + 1
     else:
         position = sys.argv.index(shorter) + 1
-    if len(sys.argv) == position or sys.argv[position][0] == '--':
+    if len(sys.argv) == position or sys.argv[position][0] == '-':
         if mandatory:
             raise MissingArgumentError (option)
     else:
         return sys.argv[position]
 
-arg_list = ['--help', '--version', '-d', '--dict','--alpha', '--write',\
+arg_list = ['-a', '-d', '-f', '-g', '-h', '-n', '-o', '-s', '-v', '-w', \
+            '--help', '--version', '--dict','--alpha', '--write', \
             '--output', '--force', '--low-case', '--print-acronyms', \
-            '--print-plural', '--no-acronyms', '--no-plural', '-g',  '--generate', \
-            '--dim', '--capitalize', '-s', '--size', '--prefix', '--new']
+            '--print-plural', '--no-acronyms', '--no-plural', '--generate', \
+            '--dim', '--capitalize', '--size', '--prefix', '--new']
 """
 The list of options that can be recognized.
 """
@@ -75,11 +76,11 @@ if __name__ == '__main__':
         if arg[0] == '-' and not arg in arg_list:
             raise UnrecognizedArgumentError (arg)
 
-    if '--help' in sys.argv:
+    if '--help' in sys.argv or '-h' in sys.argv:
         f = open("description.txt", "r")
         print (f.read())
         f.close()
-    elif '--version' in sys.argv:
+    elif '--version' in sys.argv or '-v' in sys.argv:
         f = open("version.txt", "r")
         print (f.read())
         f.close()
@@ -108,10 +109,10 @@ if __name__ == '__main__':
             dictionary = remove_plural_words(dictionary, get_option_value('--no-plural'))
 
         # getting alphabet
-        if '--alpha' in sys.argv:
-            alphabet = open_alphabet(get_option_value ('--alpha'))
+        if '--alpha' in sys.argv or '-a' in sys.argv:
+            alphabet = open_alphabet(get_option_value ('--alpha', shorter='-a'))
             missing_letters = get_missing_letters(dictionary, alphabet)
-            if '--force' in sys.argv:
+            if '--force' in sys.argv or '-f' in sys.argv:
                 dictionary = remove_missing_letters (dictionary, missing_letters)
             else:
                 if missing_letters != []:
@@ -122,8 +123,8 @@ if __name__ == '__main__':
 
 
 
-        if '--write' in sys.argv:
-            filename = get_option_value('--write', mandatory=False)
+        if '--write' in sys.argv or '-w' in sys.argv:
+            filename = get_option_value('--write', shorter='-w', mandatory=False)
             if filename == None:
                 write_clean_dictionary (dictionary)
             else:
@@ -142,7 +143,7 @@ if __name__ == '__main__':
                 matrix = build_3D_matrix(dictionary, alphabet)
 
 
-            output_file = '--output' in sys.argv
+            output_file = '--output' in sys.argv or '-o' in sys.argv
             word_list = ""
 
             prefix = '--prefix' in sys.argv
@@ -169,7 +170,7 @@ if __name__ == '__main__':
                 if max_len < min_len:
                     raise SizeValueError (size_option)
 
-            new_only = '--new' in sys.argv
+            new_only = '--new' in sys.argv or '-n' in sys.argv
 
             i = 0
             number_of_words = int(get_option_value('--generate', shorter='-g'))
@@ -189,7 +190,7 @@ if __name__ == '__main__':
                         i-=-1
 
             if output_file:
-                filename = get_option_value('--output', mandatory=False)
+                filename = get_option_value('--output', shorter='-o', mandatory=False)
                 if filename == None:
                     write_generated_words(word_list)
                 else:

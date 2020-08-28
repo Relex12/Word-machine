@@ -4,14 +4,14 @@ Generate words randomly from a statistical analysis of an input dictionary.
 
 ----------- Input and output options ----------
   -d, --dict FILE       specify the dictionary file.
-  --alpha FILE          specify the alphabet file (alphabet is deduced from the
+  -a, --alpha FILE      specify the alphabet file (alphabet is deduced from the
                          dictionary if not specified).
-  --write FILE          write the processed dictionary in the specified file.
-  --output FILE         write generated words in the specified file.
+  -w, --write FILE      write the processed dictionary in the specified file.
+  -o, --output FILE     write generated words in the specified file.
 
 ----------- Dictionary processing options ----------
-  --force               remove from the dictionary every word with at least
-                         one letter not in the alphabet (ignored is --alpha
+  -f, --force           remove from the dictionary every word with at least
+                         one letter not in the alphabet (ignored if --alpha
                          is absent).
   --low-case            lowercase every word from the dictionary.
   --print-acronyms      print acronyms from the dictionary to stdout.
@@ -33,8 +33,27 @@ Generate words randomly from a statistical analysis of an input dictionary.
                          :NUM     (more than).
                          NUM:NUM  (between)
   --prefix              specify a prefix for
-  --new                 generate words that are not in the dictionary.
+  -n, --new             generate words that are not in the dictionary.
 
 ----------- Miscellaneous options ----------
-  --help                print this help and exit.
-  --version             print version and exit.
+  -h, --help            print this help and exit.
+  -v, --version         print version and exit.
+
+----------- Input files specifications ----------
+
+  The dictionary file must always be specified. It must be represented as a
+   carriage return separated list. There should be no space between the word
+   and the carriage return character. LF and CRLF distinction should not be a
+   problem. There is no need to order the words. Duplicated words are counted
+   only once.
+
+  The alphabet file is not required, but can be used if you want to remove from
+   the dictionary words that contain specific letters. The file must contain
+   every character that can be in the dictionary words. The alphabet file must
+   be written as a single-space separated list of characters. There must be a
+   space after the final character. All the characters must be on the first
+   line, without carriage return. Upper and lower case letters must be both
+   specified if needed. Each accent, digit or special character that is used
+   have to be specified. Characters in the alphabet that are not used in the
+   dictionary words are a small loss of memory, but the program still works.
+   Characters from 'a' to 'z' and '-' are the often required.

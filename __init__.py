@@ -1,3 +1,7 @@
+"""
+## This module allows you to **execute** the code and manages command-line options.
+"""
+
 import sys
 
 from word_machine import *
@@ -8,30 +12,44 @@ from dictionary_processing import *
 ##################################
 
 class MissingArgumentError(Exception):
+    """
+    a `MissingArgumentError` is raised when an option with required argument value has no value.
+
+    * **option** is the option's value that could not be found
+    """
     def __init__(self, option):
         self.option = option
 
 class UnrecognizedArgumentError(Exception):
+    """
+    a `UnrecognizedArgumentError` is raised when an argument from the command-line interface cannot be recognized (see `arg_list` for the full list).
+
+    * **arg** is the unrecognized argument
+    """
     def __init__(self, arg):
         self.arg = arg
 
 class SizeValueError(Exception):
+    """
+    a `SizeValueError` is raised when the argument given to the `--size` option is not one of the followings : `NUM`, `:NUM`, `NUM:` or `NUM:NUM`.
+
+    * **value** is the argument that did not match any possible value of the `--size` option
+    """
     def __init__(self, value):
-        self.option = value
+        self.value = value
 
 def get_option_value(option, shorter=None, mandatory=True):
     """
-        gets the value of the specified option from the command-line interface
+    `get_option_value()` gets the value of the specified option from the command-line interface.
 
-        :param str option: the specified option
-        :param boolean mandatory: an error is being raised if true and the option has no value
-        :return: the value of the specified option
-        :rtype: string
+    * **option** (*str*) : the long version of the argument (e.g. `--dict`)
+    * **shorter** (*str*) : the short version of the argument (e.g. `-d`) (can be `None`)
+    * **mandatory** *bool* : if or not an error should be raised if no value is found
+    * **errors** : a `MissingArgumentError` can be raised if no value is found and **mandatory** is `True`
+    * **return** (*str*) : the value of the argument requested (`None` if not found)
     """
     if option in sys.argv:
         position = sys.argv.index(option) + 1
-    # elif:
-    #     print ("SAUCISSE")
     else:
         position = sys.argv.index(shorter) + 1
     if len(sys.argv) == position or sys.argv[position][0] == '--':
@@ -44,7 +62,9 @@ arg_list = ['--help', '--version', '-d', '--dict','--alpha', '--write',\
             '--output', '--force', '--low-case', '--print-acronyms', \
             '--print-plural', '--no-acronyms', '--no-plural', '-g',  '--generate', \
             '--dim', '--capitalize', '-s', '--size', '--prefix', '--new']
-
+"""
+The list of options that can be recognized.
+"""
 #############################
 # Main zone : executed code #
 #############################
@@ -92,7 +112,7 @@ if __name__ == '__main__':
             alphabet = open_alphabet(get_option_value ('--alpha'))
             missing_letters = get_missing_letters(dictionary, alphabet)
             if '--force' in sys.argv:
-                dictionary = remove_unknown_letters (dictionary, missing_letters)
+                dictionary = remove_missing_letters (dictionary, missing_letters)
             else:
                 if missing_letters != []:
                     print ('WARNING: Some characters are used in the dictionary without being in the alphabet')

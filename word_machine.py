@@ -1,3 +1,7 @@
+"""
+## This module allows you to **build** the matrix from the processed dictionary and to **generate** words.
+"""
+
 from random import choices
 
 ###############################################
@@ -5,6 +9,13 @@ from random import choices
 ###############################################
 
 def build_2D_matrix(dictionary, alphabet):
+    """
+    `build_2D_matrix()` initiate and fill a 2D matrix (dict of dict object) by browsing the dictionary.
+
+    * **dictionary** (*list*) : the input dictionary (after processing)
+    * **alphabet** (*list*) : the used alphabet (from input file or from dictionary)
+    * **return** (*dict*) : the matrix representing the probability of letter chaining each other
+    """
     # initiate matrix
     matrix = dict()
     for letter in alphabet:
@@ -28,6 +39,14 @@ def build_2D_matrix(dictionary, alphabet):
 #         print ('')
 
 def generate_word_2D(matrix, alphabet, prefix):
+    """
+    `generate_word_3D()` generates a word used the `random.choices()` method uppon the 3D matrix in the last letter column.
+
+    * **matrix** (*dict*) : the matrix representing the probability of letter chaining each other
+    * **alphabet** (*list*) : the used alphabet (from input file or from dictionary)
+    * **prefix** (*str*) : the prefix requested for the generated words
+    * **return** (*str*) : the generated word (length variable)
+    """
     if prefix == False:
         word = ''
         previous_letter = ''
@@ -46,6 +65,13 @@ def generate_word_2D(matrix, alphabet, prefix):
 ###########################################
 
 def build_3D_matrix(dictionary, alphabet):
+    """
+    `build_3D_matrix()` initiate and fill a 3D matrix (dict of dict of dict object) by browsing the dictionary.
+
+    * **dictionary** (*list*) : the input dictionary (after processing)
+    * **alphabet** (*list*) : the used alphabet (from input file or from dictionary)
+    * **return** (*dict*) : the matrix representing the probability of letter chaining each other
+    """
     # initiate matrix
     matrix = dict()
     for letter1 in alphabet:
@@ -68,6 +94,14 @@ def build_3D_matrix(dictionary, alphabet):
     return matrix
 
 def generate_word_3D(matrix, alphabet, prefix):
+    """
+    `generate_word_3D()` generates a word used the `random.choices()` method uppon the 3D matrix in the last letter column.
+
+    * **matrix** (*dict*) : the matrix representing the probability of letter chaining each other
+    * **alphabet** (*list*) : the used alphabet (from input file or from dictionary)
+    * **prefix** (*str*) : the prefix requested for the generated words
+    * **return** (*str*) : the generated word (length variable)
+    """
     if prefix == False:
         word = ''
         previous_letter1 = ''

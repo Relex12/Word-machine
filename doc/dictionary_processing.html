@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.4" />
+<title>dictionary_processing API documentation</title>
+<meta name="description" content="This module allows you to **manage** input and output files and to **process** the dictionary." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>dictionary_processing</code></h1>
+</header>
+<section id="section-intro">
+<h2 id="this-module-allows-you-to-manage-input-and-output-files-and-to-process-the-dictionary">This module allows you to <strong>manage</strong> input and output files and to <strong>process</strong> the dictionary.</h2>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+## This module allows you to **manage** input and output files and to **process** the dictionary.
+&#34;&#34;&#34;
+
+####################################
+# Input and output file management #
+####################################
+
+def open_alphabet (filename=&#34;alphabet.txt&#34;):
+    &#34;&#34;&#34;
+    `open_alphabet()` gets the input alphabet from a file.
+
+    * **filename** (*str*) : the name of the file to open (`read` mode)
+    * **return** (*list*) : the input alphabet
+    &#34;&#34;&#34;
+    f = open(filename, &#34;r&#34;)
+    alphabet = f.read().split(&#39; &#39;)
+    f.close()
+    while &#39;\n&#39; in alphabet:
+        alphabet.remove(&#39;\n&#39;)
+    alphabet.insert(0, &#39;&#39;)
+    return alphabet
+
+def open_dictionary(filename=&#34;dictionary.txt&#34;):
+    &#34;&#34;&#34;
+    `open_dictionary()` gets the input dictionary from a file.
+
+    * **filename** (*str*) : the name of the file to open (`read` mode)
+    * **return** (*list*) : the input dictionary
+    &#34;&#34;&#34;
+    f = open(filename, &#34;r&#34;)
+    dictionary = f.read().split(&#39;\n&#39;)
+    f.close()
+    while &#39;&#39; in dictionary:
+        dictionary.remove(&#39;&#39;)
+    return dictionary
+
+def get_alphabet_from_dict(dictionary):
+    &#34;&#34;&#34;
+    `get_alphabet_from_dict()` gets the alphabet from the dictionary by adding each used letter.
+
+    * **dictionary** (*list*) : the input dictionary (before processing)
+    * **return** (*list*) : the alphabet based on the letters used in the dictionary
+    &#34;&#34;&#34;
+    alphabet = []
+    for word in dictionary:
+        for letter in word:
+            if not letter in alphabet:
+                alphabet.append(letter)
+
+    alphabet = list(sorted(set(alphabet)))
+    alphabet.insert(0, &#39;&#39;)
+    return alphabet
+
+def write_clean_dictionary(dictionary, filename=&#34;output_dictionary.txt&#34;):
+    &#34;&#34;&#34;
+    `write_clean_dictionary()` writes the processed dictionary in a file.
+
+    * **dictionary** (*list*) : the input dictionary (after processing)
+    * **filename** (*str*) : the name of the file to open (`write` mode)
+    * **return** (*None*)
+    &#34;&#34;&#34;
+    f = open(filename, &#39;w&#39;)
+    for word in dictionary:
+        f.write(word+&#39;\n&#39;)
+    f.close()
+
+def write_generated_words(word_list, filename=&#34;generated_words.txt&#34;):
+    &#34;&#34;&#34;
+    `write_generated_words()` writes the list of generated words in a file.
+
+    * **word_list** (*str*) : the string that contain all generated words
+    * **filename** (*str*) : the name of the file to open (`write` mode)
+    * **return** (*None*)
+    &#34;&#34;&#34;
+    f = open(filename, &#39;w&#39;)
+    f.write(word_list)
+    f.close()
+
+#########################
+# Dictionary processing #
+#########################
+
+def process_dictionary (dictionary):
+    &#34;&#34;&#34;
+    `process_dictionary()` sorts the dictionary and removes duplicated words.
+
+    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **return** (*list*) : the sorted dictionary without duplicated words
+    &#34;&#34;&#34;
+    return sorted(set(dictionary))
+
+def remove_missing_letters(dictionary, missing_letters):
+    &#34;&#34;&#34;
+    `get_missing_letters()` removes from the dictionary every word that uses at least one letter that is not in the alphabet.
+
+    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **missing_letters** (*list*) : letters used in the dictionary that are not in the alphabet
+    * **return** (*list*) : the dictionary without any word that contain one word from **missing_letters**
+    &#34;&#34;&#34;
+    words_to_del = []
+    for letter in missing_letters:
+        for word in dictionary:
+            if letter in word:
+                words_to_del.append(word)
+    words_to_del = set(words_to_del)
+    for word in words_to_del:
+        dictionary.remove(word)
+    return dictionary
+
+def get_missing_letters (dictionary, alphabet):
+    &#34;&#34;&#34;
+    `get_missing_letters()` gets every word from the dictionary that uses at least one letter that is not in the alphabet.
+
+    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **alphabet** (*list*) : the used alphabet (from input file or from dictionary)
+    * **return** (*list*) : the list of letters used at least once in the dictionary that are not in the alphabet
+    &#34;&#34;&#34;
+    missing_letter = []
+    for word in dictionary:
+        for letter in word:
+            if not letter in alphabet and not letter in missing_letter:
+                missing_letter.append(letter)
+    return (missing_letter)
+
+def print_plural_words (dictionary, lang):
+    &#34;&#34;&#34;
+    `print_plural_words()` prints every word from the dictionary that is already in the dictionary in singular form.
+
+    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **lang** (*str*) : the language used to follow plural rules (only `FR` is available yet)
+    * **return** (*None*)
+    &#34;&#34;&#34;
+    if lang == &#39;fr&#39;:
+        for word in dictionary:
+            l = len(word)
+            if word[l-1] == &#39;s&#39;and word[:l-1] in dictionary \
+            or word[l-1] == &#39;x&#39;and word[:l-1] in dictionary \
+            or l &gt; 3 and word[l-3:l] == &#39;aux&#39;and word[:l-3]+&#39;al&#39; in dictionary \
+            or l &gt; 3 and word[l-3:l] == &#39;aux&#39;and word[:l-3]+&#39;ail&#39; in dictionary:
+                print(word)
+    # insert here plural rules from other languages
+
+def remove_plural_words (dictionary, lang):
+    &#34;&#34;&#34;
+    `remove_plural_words()` removes from the dictionary every word that is already in the dictionary in singular form.
+
+    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **lang** (*str*) : the language used to follow plural rules (only `FR` is available yet)
+    * **return** (*list*) : the dictionary without duplicated words in singular / plural forms
+    &#34;&#34;&#34;
+    words_to_del = []
+    if lang == &#39;fr&#39;:
+        for word in dictionary:
+            l = len(word)
+            if word[l-1] == &#39;s&#39;and word[:l-1] in dictionary \
+            or word[l-1] == &#39;x&#39;and word[:l-1] in dictionary \
+            or l &gt; 3 and word[l-3:l] == &#39;aux&#39;and word[:l-3]+&#39;al&#39; in dictionary \
+            or l &gt; 3 and word[l-3:l] == &#39;aux&#39;and word[:l-3]+&#39;ail&#39; in dictionary:
+                words_to_del.append(word)
+    words_to_del = set(words_to_del)
+    for word in words_to_del:
+        dictionary.remove(word)
+    # HERE insert plural rules from other languages
+    return (dictionary)
+
+def lower_case_words(dictionary):
+    &#34;&#34;&#34;
+    `lower_case_words()` lower-cases every word from the dictionary.
+
+    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **return** (*list*) : the dictionary with each word lower-cased
+    &#34;&#34;&#34;
+    return ([word.lower() for word in dictionary])
+
+def print_acronyms (dictionary):
+    &#34;&#34;&#34;
+    `print_acronyms()` prints every acronyms from the dictionary.
+    An acronyms is a word such as `word == word.upper()`.
+
+    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **return** (*None*)
+    &#34;&#34;&#34;
+    for word in dictionary:
+        if word == word.upper():
+            print(word)
+
+def remove_acronyms (dictionary):
+    &#34;&#34;&#34;
+    `remove_acronyms()` removes every acronyms from the dictionary.
+    An acronyms is a word such as `word == word.upper()`.
+
+    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **return** (*list*) : the dictionary without acronyms
+    &#34;&#34;&#34;
+    words_to_del = []
+    for word in dictionary:
+        if word == word.upper():
+            words_to_del.append(word)
+    words_to_del = set(words_to_del)
+    for word in words_to_del:
+        dictionary.remove(word)
+    return (dictionary)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="dictionary_processing.get_alphabet_from_dict"><code class="name flex">
+<span>def <span class="ident">get_alphabet_from_dict</span></span>(<span>dictionary)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="dictionary_processing.get_alphabet_from_dict" href="#dictionary_processing.get_alphabet_from_dict">get_alphabet_from_dict()</a></code> gets the alphabet from the dictionary by adding each used letter.</p>
+<ul>
+<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (before processing)</li>
+<li><strong>return</strong> (<em>list</em>) : the alphabet based on the letters used in the dictionary</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_alphabet_from_dict(dictionary):
+    &#34;&#34;&#34;
+    `get_alphabet_from_dict()` gets the alphabet from the dictionary by adding each used letter.
+
+    * **dictionary** (*list*) : the input dictionary (before processing)
+    * **return** (*list*) : the alphabet based on the letters used in the dictionary
+    &#34;&#34;&#34;
+    alphabet = []
+    for word in dictionary:
+        for letter in word:
+            if not letter in alphabet:
+                alphabet.append(letter)
+
+    alphabet = list(sorted(set(alphabet)))
+    alphabet.insert(0, &#39;&#39;)
+    return alphabet</code></pre>
+</details>
+</dd>
+<dt id="dictionary_processing.get_missing_letters"><code class="name flex">
+<span>def <span class="ident">get_missing_letters</span></span>(<span>dictionary, alphabet)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="dictionary_processing.get_missing_letters" href="#dictionary_processing.get_missing_letters">get_missing_letters()</a></code> gets every word from the dictionary that uses at least one letter that is not in the alphabet.</p>
+<ul>
+<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (while processing)</li>
+<li><strong>alphabet</strong> (<em>list</em>) : the used alphabet (from input file or from dictionary)</li>
+<li><strong>return</strong> (<em>list</em>) : the list of letters used at least once in the dictionary that are not in the alphabet</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_missing_letters (dictionary, alphabet):
+    &#34;&#34;&#34;
+    `get_missing_letters()` gets every word from the dictionary that uses at least one letter that is not in the alphabet.
+
+    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **alphabet** (*list*) : the used alphabet (from input file or from dictionary)
+    * **return** (*list*) : the list of letters used at least once in the dictionary that are not in the alphabet
+    &#34;&#34;&#34;
+    missing_letter = []
+    for word in dictionary:
+        for letter in word:
+            if not letter in alphabet and not letter in missing_letter:
+                missing_letter.append(letter)
+    return (missing_letter)</code></pre>
+</details>
+</dd>
+<dt id="dictionary_processing.lower_case_words"><code class="name flex">
+<span>def <span class="ident">lower_case_words</span></span>(<span>dictionary)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="dictionary_processing.lower_case_words" href="#dictionary_processing.lower_case_words">lower_case_words()</a></code> lower-cases every word from the dictionary.</p>
+<ul>
+<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (while processing)</li>
+<li><strong>return</strong> (<em>list</em>) : the dictionary with each word lower-cased</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def lower_case_words(dictionary):
+    &#34;&#34;&#34;
+    `lower_case_words()` lower-cases every word from the dictionary.
+
+    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **return** (*list*) : the dictionary with each word lower-cased
+    &#34;&#34;&#34;
+    return ([word.lower() for word in dictionary])</code></pre>
+</details>
+</dd>
+<dt id="dictionary_processing.open_alphabet"><code class="name flex">
+<span>def <span class="ident">open_alphabet</span></span>(<span>filename='alphabet.txt')</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="dictionary_processing.open_alphabet" href="#dictionary_processing.open_alphabet">open_alphabet()</a></code> gets the input alphabet from a file.</p>
+<ul>
+<li><strong>filename</strong> (<em>str</em>) : the name of the file to open (<code>read</code> mode)</li>
+<li><strong>return</strong> (<em>list</em>) : the input alphabet</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def open_alphabet (filename=&#34;alphabet.txt&#34;):
+    &#34;&#34;&#34;
+    `open_alphabet()` gets the input alphabet from a file.
+
+    * **filename** (*str*) : the name of the file to open (`read` mode)
+    * **return** (*list*) : the input alphabet
+    &#34;&#34;&#34;
+    f = open(filename, &#34;r&#34;)
+    alphabet = f.read().split(&#39; &#39;)
+    f.close()
+    while &#39;\n&#39; in alphabet:
+        alphabet.remove(&#39;\n&#39;)
+    alphabet.insert(0, &#39;&#39;)
+    return alphabet</code></pre>
+</details>
+</dd>
+<dt id="dictionary_processing.open_dictionary"><code class="name flex">
+<span>def <span class="ident">open_dictionary</span></span>(<span>filename='dictionary.txt')</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="dictionary_processing.open_dictionary" href="#dictionary_processing.open_dictionary">open_dictionary()</a></code> gets the input dictionary from a file.</p>
+<ul>
+<li><strong>filename</strong> (<em>str</em>) : the name of the file to open (<code>read</code> mode)</li>
+<li><strong>return</strong> (<em>list</em>) : the input dictionary</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def open_dictionary(filename=&#34;dictionary.txt&#34;):
+    &#34;&#34;&#34;
+    `open_dictionary()` gets the input dictionary from a file.
+
+    * **filename** (*str*) : the name of the file to open (`read` mode)
+    * **return** (*list*) : the input dictionary
+    &#34;&#34;&#34;
+    f = open(filename, &#34;r&#34;)
+    dictionary = f.read().split(&#39;\n&#39;)
+    f.close()
+    while &#39;&#39; in dictionary:
+        dictionary.remove(&#39;&#39;)
+    return dictionary</code></pre>
+</details>
+</dd>
+<dt id="dictionary_processing.print_acronyms"><code class="name flex">
+<span>def <span class="ident">print_acronyms</span></span>(<span>dictionary)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="dictionary_processing.print_acronyms" href="#dictionary_processing.print_acronyms">print_acronyms()</a></code> prints every acronyms from the dictionary.
+An acronyms is a word such as <code>word == word.upper()</code>.</p>
+<ul>
+<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (while processing)</li>
+<li><strong>return</strong> (<em>None</em>)</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def print_acronyms (dictionary):
+    &#34;&#34;&#34;
+    `print_acronyms()` prints every acronyms from the dictionary.
+    An acronyms is a word such as `word == word.upper()`.
+
+    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **return** (*None*)
+    &#34;&#34;&#34;
+    for word in dictionary:
+        if word == word.upper():
+            print(word)</code></pre>
+</details>
+</dd>
+<dt id="dictionary_processing.print_plural_words"><code class="name flex">
+<span>def <span class="ident">print_plural_words</span></span>(<span>dictionary, lang)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="dictionary_processing.print_plural_words" href="#dictionary_processing.print_plural_words">print_plural_words()</a></code> prints every word from the dictionary that is already in the dictionary in singular form.</p>
+<ul>
+<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (while processing)</li>
+<li><strong>lang</strong> (<em>str</em>) : the language used to follow plural rules (only <code>FR</code> is available yet)</li>
+<li><strong>return</strong> (<em>None</em>)</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def print_plural_words (dictionary, lang):
+    &#34;&#34;&#34;
+    `print_plural_words()` prints every word from the dictionary that is already in the dictionary in singular form.
+
+    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **lang** (*str*) : the language used to follow plural rules (only `FR` is available yet)
+    * **return** (*None*)
+    &#34;&#34;&#34;
+    if lang == &#39;fr&#39;:
+        for word in dictionary:
+            l = len(word)
+            if word[l-1] == &#39;s&#39;and word[:l-1] in dictionary \
+            or word[l-1] == &#39;x&#39;and word[:l-1] in dictionary \
+            or l &gt; 3 and word[l-3:l] == &#39;aux&#39;and word[:l-3]+&#39;al&#39; in dictionary \
+            or l &gt; 3 and word[l-3:l] == &#39;aux&#39;and word[:l-3]+&#39;ail&#39; in dictionary:
+                print(word)</code></pre>
+</details>
+</dd>
+<dt id="dictionary_processing.process_dictionary"><code class="name flex">
+<span>def <span class="ident">process_dictionary</span></span>(<span>dictionary)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="dictionary_processing.process_dictionary" href="#dictionary_processing.process_dictionary">process_dictionary()</a></code> sorts the dictionary and removes duplicated words.</p>
+<ul>
+<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (while processing)</li>
+<li><strong>return</strong> (<em>list</em>) : the sorted dictionary without duplicated words</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def process_dictionary (dictionary):
+    &#34;&#34;&#34;
+    `process_dictionary()` sorts the dictionary and removes duplicated words.
+
+    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **return** (*list*) : the sorted dictionary without duplicated words
+    &#34;&#34;&#34;
+    return sorted(set(dictionary))</code></pre>
+</details>
+</dd>
+<dt id="dictionary_processing.remove_acronyms"><code class="name flex">
+<span>def <span class="ident">remove_acronyms</span></span>(<span>dictionary)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="dictionary_processing.remove_acronyms" href="#dictionary_processing.remove_acronyms">remove_acronyms()</a></code> removes every acronyms from the dictionary.
+An acronyms is a word such as <code>word == word.upper()</code>.</p>
+<ul>
+<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (while processing)</li>
+<li><strong>return</strong> (<em>list</em>) : the dictionary without acronyms</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def remove_acronyms (dictionary):
+    &#34;&#34;&#34;
+    `remove_acronyms()` removes every acronyms from the dictionary.
+    An acronyms is a word such as `word == word.upper()`.
+
+    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **return** (*list*) : the dictionary without acronyms
+    &#34;&#34;&#34;
+    words_to_del = []
+    for word in dictionary:
+        if word == word.upper():
+            words_to_del.append(word)
+    words_to_del = set(words_to_del)
+    for word in words_to_del:
+        dictionary.remove(word)
+    return (dictionary)</code></pre>
+</details>
+</dd>
+<dt id="dictionary_processing.remove_missing_letters"><code class="name flex">
+<span>def <span class="ident">remove_missing_letters</span></span>(<span>dictionary, missing_letters)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="dictionary_processing.get_missing_letters" href="#dictionary_processing.get_missing_letters">get_missing_letters()</a></code> removes from the dictionary every word that uses at least one letter that is not in the alphabet.</p>
+<ul>
+<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (while processing)</li>
+<li><strong>missing_letters</strong> (<em>list</em>) : letters used in the dictionary that are not in the alphabet</li>
+<li><strong>return</strong> (<em>list</em>) : the dictionary without any word that contain one word from <strong>missing_letters</strong></li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def remove_missing_letters(dictionary, missing_letters):
+    &#34;&#34;&#34;
+    `get_missing_letters()` removes from the dictionary every word that uses at least one letter that is not in the alphabet.
+
+    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **missing_letters** (*list*) : letters used in the dictionary that are not in the alphabet
+    * **return** (*list*) : the dictionary without any word that contain one word from **missing_letters**
+    &#34;&#34;&#34;
+    words_to_del = []
+    for letter in missing_letters:
+        for word in dictionary:
+            if letter in word:
+                words_to_del.append(word)
+    words_to_del = set(words_to_del)
+    for word in words_to_del:
+        dictionary.remove(word)
+    return dictionary</code></pre>
+</details>
+</dd>
+<dt id="dictionary_processing.remove_plural_words"><code class="name flex">
+<span>def <span class="ident">remove_plural_words</span></span>(<span>dictionary, lang)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="dictionary_processing.remove_plural_words" href="#dictionary_processing.remove_plural_words">remove_plural_words()</a></code> removes from the dictionary every word that is already in the dictionary in singular form.</p>
+<ul>
+<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (while processing)</li>
+<li><strong>lang</strong> (<em>str</em>) : the language used to follow plural rules (only <code>FR</code> is available yet)</li>
+<li><strong>return</strong> (<em>list</em>) : the dictionary without duplicated words in singular / plural forms</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def remove_plural_words (dictionary, lang):
+    &#34;&#34;&#34;
+    `remove_plural_words()` removes from the dictionary every word that is already in the dictionary in singular form.
+
+    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **lang** (*str*) : the language used to follow plural rules (only `FR` is available yet)
+    * **return** (*list*) : the dictionary without duplicated words in singular / plural forms
+    &#34;&#34;&#34;
+    words_to_del = []
+    if lang == &#39;fr&#39;:
+        for word in dictionary:
+            l = len(word)
+            if word[l-1] == &#39;s&#39;and word[:l-1] in dictionary \
+            or word[l-1] == &#39;x&#39;and word[:l-1] in dictionary \
+            or l &gt; 3 and word[l-3:l] == &#39;aux&#39;and word[:l-3]+&#39;al&#39; in dictionary \
+            or l &gt; 3 and word[l-3:l] == &#39;aux&#39;and word[:l-3]+&#39;ail&#39; in dictionary:
+                words_to_del.append(word)
+    words_to_del = set(words_to_del)
+    for word in words_to_del:
+        dictionary.remove(word)
+    # HERE insert plural rules from other languages
+    return (dictionary)</code></pre>
+</details>
+</dd>
+<dt id="dictionary_processing.write_clean_dictionary"><code class="name flex">
+<span>def <span class="ident">write_clean_dictionary</span></span>(<span>dictionary, filename='output_dictionary.txt')</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="dictionary_processing.write_clean_dictionary" href="#dictionary_processing.write_clean_dictionary">write_clean_dictionary()</a></code> writes the processed dictionary in a file.</p>
+<ul>
+<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (after processing)</li>
+<li><strong>filename</strong> (<em>str</em>) : the name of the file to open (<code>write</code> mode)</li>
+<li><strong>return</strong> (<em>None</em>)</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_clean_dictionary(dictionary, filename=&#34;output_dictionary.txt&#34;):
+    &#34;&#34;&#34;
+    `write_clean_dictionary()` writes the processed dictionary in a file.
+
+    * **dictionary** (*list*) : the input dictionary (after processing)
+    * **filename** (*str*) : the name of the file to open (`write` mode)
+    * **return** (*None*)
+    &#34;&#34;&#34;
+    f = open(filename, &#39;w&#39;)
+    for word in dictionary:
+        f.write(word+&#39;\n&#39;)
+    f.close()</code></pre>
+</details>
+</dd>
+<dt id="dictionary_processing.write_generated_words"><code class="name flex">
+<span>def <span class="ident">write_generated_words</span></span>(<span>word_list, filename='generated_words.txt')</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="dictionary_processing.write_generated_words" href="#dictionary_processing.write_generated_words">write_generated_words()</a></code> writes the list of generated words in a file.</p>
+<ul>
+<li><strong>word_list</strong> (<em>str</em>) : the string that contain all generated words</li>
+<li><strong>filename</strong> (<em>str</em>) : the name of the file to open (<code>write</code> mode)</li>
+<li><strong>return</strong> (<em>None</em>)</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write_generated_words(word_list, filename=&#34;generated_words.txt&#34;):
+    &#34;&#34;&#34;
+    `write_generated_words()` writes the list of generated words in a file.
+
+    * **word_list** (*str*) : the string that contain all generated words
+    * **filename** (*str*) : the name of the file to open (`write` mode)
+    * **return** (*None*)
+    &#34;&#34;&#34;
+    f = open(filename, &#39;w&#39;)
+    f.write(word_list)
+    f.close()</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul>
+<li><a href="#this-module-allows-you-to-manage-input-and-output-files-and-to-process-the-dictionary">This module allows you to manage input and output files and to process the dictionary.</a></li>
+</ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="dictionary_processing.get_alphabet_from_dict" href="#dictionary_processing.get_alphabet_from_dict">get_alphabet_from_dict</a></code></li>
+<li><code><a title="dictionary_processing.get_missing_letters" href="#dictionary_processing.get_missing_letters">get_missing_letters</a></code></li>
+<li><code><a title="dictionary_processing.lower_case_words" href="#dictionary_processing.lower_case_words">lower_case_words</a></code></li>
+<li><code><a title="dictionary_processing.open_alphabet" href="#dictionary_processing.open_alphabet">open_alphabet</a></code></li>
+<li><code><a title="dictionary_processing.open_dictionary" href="#dictionary_processing.open_dictionary">open_dictionary</a></code></li>
+<li><code><a title="dictionary_processing.print_acronyms" href="#dictionary_processing.print_acronyms">print_acronyms</a></code></li>
+<li><code><a title="dictionary_processing.print_plural_words" href="#dictionary_processing.print_plural_words">print_plural_words</a></code></li>
+<li><code><a title="dictionary_processing.process_dictionary" href="#dictionary_processing.process_dictionary">process_dictionary</a></code></li>
+<li><code><a title="dictionary_processing.remove_acronyms" href="#dictionary_processing.remove_acronyms">remove_acronyms</a></code></li>
+<li><code><a title="dictionary_processing.remove_missing_letters" href="#dictionary_processing.remove_missing_letters">remove_missing_letters</a></code></li>
+<li><code><a title="dictionary_processing.remove_plural_words" href="#dictionary_processing.remove_plural_words">remove_plural_words</a></code></li>
+<li><code><a title="dictionary_processing.write_clean_dictionary" href="#dictionary_processing.write_clean_dictionary">write_clean_dictionary</a></code></li>
+<li><code><a title="dictionary_processing.write_generated_words" href="#dictionary_processing.write_generated_words">write_generated_words</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.4</a>.</p>
+</footer>
+</body>
+</html>

@@ -179,15 +179,15 @@ if __name__ == '__main__':
                     word = generate_word_2D(matrix, alphabet, prefix)
                 else:
                     word = generate_word_3D(matrix, alphabet, prefix)
-                if '--capitalize' in sys.argv:
-                    word = word.capitalize()
                 if (min_len <= len(word) and len(word) <= max_len) \
                 and not (new_only and word in dictionary):
-                        if output_file:
-                            word_list += word + '\n'
-                        else:
-                            print (word)
-                        i-=-1
+                    if '--capitalize' in sys.argv:
+                        word = word.capitalize()
+                    if output_file:
+                        word_list += word + '\n'
+                    else:
+                        print (word)
+                    i-=-1
 
             if output_file:
                 filename = get_option_value('--output', shorter='-o', mandatory=False)

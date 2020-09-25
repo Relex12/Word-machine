@@ -21,7 +21,7 @@ def open_alphabet (filename="alphabet.txt"):
     alphabet.insert(0, '')
     return alphabet
 
-def open_dictionary(filename="dictionary.txt"):
+def open_dictionary(filename="helloworld.txt"):
     """
     `open_dictionary()` gets the input dictionary from a file.
 

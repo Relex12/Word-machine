@@ -22,7 +22,7 @@ Generate words randomly from a statistical analysis of an input dictionary.
   --no-plural LANG      remove plural words from the dictionary.
 
 ----------- Word generation options ----------
-  -g, --generate NUM    generate as many words as specified (option required
+  -g, --gen NUM         generate as many words as specified (option required
                          for every option below).
   --dim NUM             use the specified dimension for the matrix (between 2
                          and 3).
@@ -32,7 +32,7 @@ Generate words randomly from a statistical analysis of an input dictionary.
                          NUM:     (less than)
                          :NUM     (more than).
                          NUM:NUM  (between)
-  --prefix              specify a prefix for
+  --prefix STR          specify STR as a prefix for all generated words.
   -n, --new             generate words that are not in the dictionary.
 
 ----------- Miscellaneous options ----------

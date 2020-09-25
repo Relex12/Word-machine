@@ -59,9 +59,9 @@ def get_option_value(option, shorter=None, mandatory=True):
         return sys.argv[position]
 
 arg_list = ['-a', '-d', '-f', '-g', '-h', '-n', '-o', '-s', '-v', '-w', \
-            '--help', '--version', '--dict','--alpha', '--write', \
+            '--help', '--version', '--dict', '--alpha', '--write', \
             '--output', '--force', '--low-case', '--print-acronyms', \
-            '--print-plural', '--no-acronyms', '--no-plural', '--generate', \
+            '--print-plural', '--no-acronyms', '--no-plural', '--gen', \
             '--dim', '--capitalize', '--size', '--prefix', '--new']
 """
 The list of options that can be recognized.

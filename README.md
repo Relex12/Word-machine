@@ -23,6 +23,8 @@ One word-machine is installed, you should be able to run `word-machine -g 1`, th
 
 As long as dictionary processing can be quite long, a few methods are given to help you manage it. These methods can low-case every word in the dictionary, remove acronyms, remove duplicated words between singular and plural forms, even remove every word that contains at least one character that is not in the alphabet file (see the options below for more details). **The dictionary is always sorted and duplicates are removed.**
 
+Every line from the dictionary starting with the `#` character will be treated as a **comment**.
+
 ## Results
 
 English-version example will arrive soon.
@@ -57,7 +59,7 @@ See [description.txt](description.txt) for more information, or use `word-machin
 
 ## Run the tests
 
-The `test/test-list.txt` file lists unit tests for every possible option. 
+The `test/test-list.txt` file lists unit tests for all option. 
 
 On Unix, run `bash test/test-list.txt` to run each test, there should be no error. 
 

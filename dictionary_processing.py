@@ -31,8 +31,12 @@ def open_dictionary(filename="helloworld.txt"):
     f = open(filename, "r")
     dictionary = f.read().split('\n')
     f.close()
-    while '' in dictionary:
-        dictionary.remove('')
+    to_del = []
+    for word in dictionary:
+        if word.startswith('#') or word == '' or word == ' ':
+            to_del.append(word)
+    for word in to_del:
+        dictionary.remove(word)
     return dictionary
 
 def get_alphabet_from_dict(dictionary):

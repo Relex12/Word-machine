@@ -55,6 +55,12 @@ se
 
 See [description.txt](description.txt) for more information, or use `word-machine -h`.
 
+## Run the tests
+
+The `test/test-list.txt` file lists unit tests for every possible option. 
+
+On Unix, run `bash test/test-list.txt` to run each test, there should be no error. 
+
 ## Introduction to the code
 
 As the code have been developed on Atom, the input files can contain a final `'\n'` character. They are systematically removed when the files are loaded. Every eventual empty word (`''`) (corresponding to a white line) is removed when the dictionary is loaded.

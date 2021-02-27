@@ -1,7 +1,21 @@
 # Word-machine
 A word generator from dictionary in Python
 
-[TOC]
+* [Word-machine](#word-machine)
+    * [Description](#description)
+    * [Original idea](#original-idea)
+    * [Run the demo](#run-the-demo)
+    * [Dictionary processing](#dictionary-processing)
+    * [Results](#results)
+    * [Command-line interface options](#command-line-interface-options)
+    * [Run the tests](#run-the-tests)
+    * [Introduction to the code](#introduction-to-the-code)
+    * [Documentation](#documentation)
+    * [How to improve ?](#how-to-improve-)
+    * [Python version](#python-version)
+    * [License](#license)
+
+<!-- table of contents created by Adrian Bonnet, see https://github.com/Relex12/Markdown-Table-of-Contents for more -->
 
 ## Description
 

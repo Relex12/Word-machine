@@ -4,8 +4,8 @@
 
 import sys
 
-from word_machine import *
-from dictionary_processing import *
+from generation import *
+from dictionary import *
 
 ##################################
 # Command line option processing #

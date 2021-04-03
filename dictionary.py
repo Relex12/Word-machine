@@ -21,22 +21,23 @@ def open_alphabet (filename):
     alphabet.insert(0, '')
     return alphabet
 
-def open_dictionary(filename):
+def open_dictionaries(filenames):
     """
     `open_dictionary()` gets the input dictionary from a file.
 
-    * **filename** (*str*) : the name of the file to open (`read` mode)
+    * **filenames** (*list*) : the list of names of files to open (`read` mode)
     * **return** (*list*) : the input dictionary
     """
-    f = open(filename, "r")
-    dictionary = f.read().split('\n')
-    f.close()
-    to_del = []
-    for word in dictionary:
-        if word.startswith('#') or word == '' or word == ' ':
-            to_del.append(word)
-    for word in to_del:
-        dictionary.remove(word)
+    for filename in filenames:
+        f = open(filename, "r")
+        dictionary = f.read().split('\n')
+        f.close()
+        to_del = []
+        for word in dictionary:
+            if word.startswith('#') or word == '' or word == ' ':
+                to_del.append(word)
+        for word in to_del:
+            dictionary.remove(word)
     return dictionary
 
 def get_alphabet_from_dict(dictionary):

@@ -23,7 +23,7 @@ class SizeValueError(Exception):
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-v", "--version", action="version", version='1.0')
-parser.add_argument("-d", "--dict", metavar='FILE', type=str, default='helloworld.txt', help="specify the dictionary file")
+parser.add_argument("-d", "--dict", metavar='FILES LIST', nargs='*', help="specify the dictionary files")
 parser.add_argument("-a", "--alpha", metavar='FILE', type=str, help="specify the alphabet file (alphabet is deduced from the dictionary if not specified)")
 parser.add_argument("-w", "--write", metavar='FILE', type=str, help="write the processed dictionary in the specified file")
 parser.add_argument("-o", "--output", metavar='FILE', type=str, help="write generated words in the specified file")
@@ -50,7 +50,7 @@ args = parser.parse_args()
 if __name__ == '__main__':
 
     # getting dictionary
-    dictionary = process_dictionary(open_dictionary(args.dict))
+    dictionary = process_dictionary(open_dictionaries(args.dict))
 
     if args.print_acronyms:
         print_acronyms (dictionary)

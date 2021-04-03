@@ -121,20 +121,3 @@ def generate_word_3D(matrix, alphabet, prefix):
         previous_letter1 = previous_letter2
         previous_letter2 = new_letter
     return (word)
-
-# def generate_3D_from_end(matrix, alphabet, suffix):
-#     if len(suffix) == 1:
-#         next_letter1 = suffix[0]
-#         next_letter2 = ''
-#     else:
-#         next_letter1 = suffix[0]
-#         next_letter2 = suffix[1]
-#     word = suffix
-#     new_letter = None
-#     while new_letter != '':
-#         new_letter = choices(population=alphabet, weights=matrix[next_letter1][next_letter2].values(), k=1)[0]
-#         print (new_letter, word)
-#         word = new_letter+word
-#         next_letter1 = new_letter
-#         next_letter2 = next_letter1
-#     return (word)

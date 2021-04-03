@@ -6,7 +6,7 @@
 # Input and output file management #
 ####################################
 
-def open_alphabet (filename="alphabet.txt"):
+def open_alphabet (filename):
     """
     `open_alphabet()` gets the input alphabet from a file.
 
@@ -21,7 +21,7 @@ def open_alphabet (filename="alphabet.txt"):
     alphabet.insert(0, '')
     return alphabet
 
-def open_dictionary(filename="helloworld.txt"):
+def open_dictionary(filename):
     """
     `open_dictionary()` gets the input dictionary from a file.
 
@@ -56,7 +56,7 @@ def get_alphabet_from_dict(dictionary):
     alphabet.insert(0, '')
     return alphabet
 
-def write_clean_dictionary(dictionary, filename="output_dictionary.txt"):
+def write_clean_dictionary(dictionary, filename):
     """
     `write_clean_dictionary()` writes the processed dictionary in a file.
 
@@ -69,7 +69,7 @@ def write_clean_dictionary(dictionary, filename="output_dictionary.txt"):
         f.write(word+'\n')
     f.close()
 
-def write_generated_words(word_list, filename="generated_words.txt"):
+def write_generated_words(word_list, filename):
     """
     `write_generated_words()` writes the list of generated words in a file.
 

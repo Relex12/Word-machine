@@ -1,0 +1,30 @@
+REPRENDRE:
+
+
+
+Possibilité de stocker les matrices
+Matrice dimension 4
+Plot
+ReadMe (FR et EN)
+    Mettre à jour les infos
+    Lien vers la doc sur le site
+    Lien vers le dépôt et la VF
+    Lien vers le dépôt Dictionaries
+    Traduire
+Regénérer la doc
+
+
+
+
+
+Utiliser argparse
+Pouvoir chainer les dictionnaires
+Renommer les fichiers
+
+
+
+NE PAS FAIRE :
+
+Supprimer la possibilité d'ajouter un alphabet
+    -a, --alpha
+    --force

@@ -1,5 +1,7 @@
 REPRENDRE:
 
+Ecrire les résultats dans plusieurs colonnes
+--new comprend les mots déjà générés
 
 
 Possibilité de stocker les matrices

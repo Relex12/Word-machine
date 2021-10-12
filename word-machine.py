@@ -23,7 +23,7 @@ class SizeValueError(Exception):
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-v", "--version", action="version", version='1.0')
-parser.add_argument("-d", "--dict", metavar='FILES LIST', nargs='*', help="specify the dictionary files")
+parser.add_argument("-d", "--dict", metavar='FILE', nargs='*', help="specify the dictionary files")
 parser.add_argument("-a", "--alpha", metavar='FILE', type=str, help="specify the alphabet file (alphabet is deduced from the dictionary if not specified)")
 parser.add_argument("-w", "--write", metavar='FILE', type=str, help="write the processed dictionary in the specified file")
 parser.add_argument("-o", "--output", metavar='FILE', type=str, help="write generated words in the specified file")
@@ -36,9 +36,9 @@ parser.add_argument("--no-plural", metavar='LANG', type=str, help="remove plural
 parser.add_argument("-g", "--gen", metavar='NUM', type=int, help="generate as many words as specified (option required for every option below)")
 parser.add_argument("--dim", metavar='NUM', type=int, choices=range(2,3), default=3, help="use the specified dimension for the matrix (between 2 and 3)")
 parser.add_argument("-c", "--capitalize", action='store_true', help="capitalize generated words")
-parser.add_argument("-s", "--size", help="specify the length of generated words. SIZE can be NUM (equals) NUM: (less than) :NUM (more than). NUM:NUM (between)")
+parser.add_argument("-s", "--size", help="specify the length of generated words. SIZE can be NUM (equals) NUM: (less than) :NUM (more than) NUM:NUM (between)")
 parser.add_argument("-p", "--prefix", type=str, help="specify a prefix for all generated words")
-parser.add_argument("-n", "--new", action='store_true', help="generate words that are not in the dictionary")
+parser.add_argument("-n", "--new", action='store_true', help="generate words that are not in the dictionary and not already generated")
 
 args = parser.parse_args()
 
@@ -135,7 +135,7 @@ if __name__ == '__main__':
             else:
                 word = generate_word_3D(matrix, alphabet, prefix)
             if (min_len <= len(word) and len(word) <= max_len) \
-            and not (args.new and word in dictionary):
+            and not (args.new and (word in dictionary or word in word_list) ):
                 if args.capitalize:
                     word = word.capitalize()
                 if output_file:

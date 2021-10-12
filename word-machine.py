@@ -27,6 +27,7 @@ parser.add_argument("-d", "--dict", metavar='FILE', nargs='*', help="specify the
 parser.add_argument("-a", "--alpha", metavar='FILE', type=str, help="specify the alphabet file (alphabet is deduced from the dictionary if not specified)")
 parser.add_argument("-w", "--write", metavar='FILE', type=str, help="write the processed dictionary in the specified file")
 parser.add_argument("-o", "--output", metavar='FILE', type=str, help="write generated words in the specified file")
+parser.add_argument("--nb-columns", metavar='NUM', type=int, default=1, help="specify the number of columns tu use to display the generated words")
 parser.add_argument("-f", "--force", action='store_true', help="remove from the dictionary every word with at least one letter not in the alphabet (ignored if --alpha is absent)")
 parser.add_argument("--low-case", action='store_true', help="lowercase every word from the dictionary")
 parser.add_argument("--print-acronyms", action='store_true', help="print acronyms from the dictionary to stdout")
@@ -100,7 +101,7 @@ if __name__ == '__main__':
 
 
         output_file = args.output is not None
-        word_list = ""
+        word_list = [[]]
 
         prefix = args.prefix is not None
         if prefix:
@@ -138,12 +139,21 @@ if __name__ == '__main__':
             and not (args.new and (word in dictionary or word in word_list) ):
                 if args.capitalize:
                     word = word.capitalize()
-                if output_file:
-                    word_list += word + '\n'
-                else:
-                    print (word)
-                i-=-1
+                if len(word_list[-1]) == args.nb_columns:
+                    word_list.append([])
+                word_list[-1].append(word)
+                i+=1
+
+        while len(word_list[-1]) != args.nb_columns:
+            word_list[-1].append(" ")
+
+        col_widths = [max(map(len, col)) for col in zip(*word_list)]
+        output_words = ""
+        for row in word_list:
+            output_words += "  ".join((val.ljust(width) for val, width in zip(row, col_widths))) + '\n'
 
         if output_file:
             filename = args.output
-            write_generated_words(word_list, filename)
+            write_generated_words(output_words, filename)
+        else:
+            print (output_words)

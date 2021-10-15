@@ -16,6 +16,14 @@ class SizeValueError(Exception):
     def __init__(self, value):
         self.value = value
 
+class MaxAttemptsExceededError(Exception):
+    """
+    a `MaxAttemptsExceededError` is raised when the generation of a new word failed more times than the maximum number of attempts, based on the given generation rules.
+    * **value** is the maximum number of attempts
+    """
+    def __init__(self, value):
+        self.value = value
+
 ########################
 # Arguments processing #
 ########################
@@ -35,11 +43,12 @@ parser.add_argument("--print-plural", metavar='LANG', type=str, help="print to s
 parser.add_argument("--no-acronyms", action='store_true', help="remove acronyms from the dictionary")
 parser.add_argument("--no-plural", metavar='LANG', type=str, help="remove plural words from the dictionary")
 parser.add_argument("-g", "--gen", metavar='NUM', type=int, help="generate as many words as specified (option required for every option below)")
-parser.add_argument("--dim", metavar='NUM', type=int, choices=range(2,3), default=3, help="use the specified dimension for the matrix (between 2 and 3)")
+parser.add_argument("--dim", metavar='NUM', type=int, choices=range(2,3+1), default=3, help="use the specified dimension for the matrix (between 2 and 3)")
 parser.add_argument("-c", "--capitalize", action='store_true', help="capitalize generated words")
 parser.add_argument("-s", "--size", help="specify the length of generated words. SIZE can be NUM (equals) NUM: (less than) :NUM (more than) NUM:NUM (between)")
 parser.add_argument("-p", "--prefix", type=str, help="specify a prefix for all generated words")
 parser.add_argument("-n", "--new", action='store_true', help="generate words that are not in the dictionary and not already generated")
+parser.add_argument("--max_attempts", metavar='NUM', type=int, default=50, help="specify the number of tries to generate a new word before throwing an error")
 
 args = parser.parse_args()
 
@@ -101,7 +110,7 @@ if __name__ == '__main__':
 
 
         output_file = args.output is not None
-        word_list = [[]]
+        word_list = []
 
         prefix = args.prefix is not None
         if prefix:
@@ -128,28 +137,40 @@ if __name__ == '__main__':
             if max_len < min_len:
                 raise SizeValueError (size_option)
 
-        i = 0
+        nb_word_added = 0
+        failed_attempts = 0
         number_of_words = args.gen
-        while i != number_of_words:
+        while nb_word_added != number_of_words:
             if args.dim == 2:
                 word = generate_word_2D(matrix, alphabet, prefix)
             else:
                 word = generate_word_3D(matrix, alphabet, prefix)
             if (min_len <= len(word) and len(word) <= max_len) \
-            and not (args.new and (word in dictionary or word in word_list) ):
+            and (args.new and not word in dictionary) or not word in word_list :
                 if args.capitalize:
                     word = word.capitalize()
-                if len(word_list[-1]) == args.nb_columns:
-                    word_list.append([])
-                word_list[-1].append(word)
-                i+=1
+                word_list.append(word)
+                nb_word_added += 1
+                failed_attempts = 0
+            else:
+                failed_attempts += 1
+                if failed_attempts >= args.max_attempts:
+                    raise MaxAttemptsExceededError (args.max_attempts)
 
-        while len(word_list[-1]) != args.nb_columns:
-            word_list[-1].append(" ")
 
-        col_widths = [max(map(len, col)) for col in zip(*word_list)]
+        column_word_list = [[]]
+
+        for word in word_list:
+            if len(column_word_list[-1]) == args.nb_columns:
+                column_word_list.append([])
+            column_word_list[-1].append(word)
+
+        while len(column_word_list[-1]) != args.nb_columns:
+            column_word_list[-1].append(" ")
+
+        col_widths = [max(map(len, col)) for col in zip(*column_word_list)]
         output_words = ""
-        for row in word_list:
+        for row in column_word_list:
             output_words += "  ".join((val.ljust(width) for val, width in zip(row, col_widths))) + '\n'
 
         if output_file:

@@ -1,8 +1,23 @@
 # Word-machine
 A word generator from dictionary in Python
 
+![](https://img.shields.io/github/license/Relex12/Word-Machine) ![](https://img.shields.io/github/repo-size/Relex12/Word-Machine) ![](https://img.shields.io/github/languages/top/Relex12/Word-Machine) ![](https://img.shields.io/github/last-commit/Relex12/Word-Machine) ![](https://img.shields.io/github/stars/Relex12/Word-Machine)
+
+Check out on GitHub
+
+[![Word-Machine](https://github-readme-stats.vercel.app/api/pin/?username=Relex12&repo=Word-Machine)](https://github.com/Relex12/Word-Machine)
+
+Documentation:
+
+* [`dictionary.py`](https://relex12.github.io/Word-machine/doc/dictionary.html)
+* [`generation.py`](https://relex12.github.io/Word-machine/doc/generation.html)
+* [`word-machine.py`](https://relex12.github.io/Word-machine/doc/word-machine.html)
+
+---
+
+## Summary
+
 * [Word-machine](#word-machine)
-    * [Documentation](#documentation)
     * [Description](#description)
     * [Original idea](#original-idea)
     * [Run the demo](#run-the-demo)
@@ -11,20 +26,12 @@ A word generator from dictionary in Python
     * [Command-line interface options](#command-line-interface-options)
     * [Run the tests](#run-the-tests)
     * [Introduction to the code](#introduction-to-the-code)
-    * [Documentation generation](#documentation-generation)
+    * [Documentation](#documentation)
     * [How to improve ?](#how-to-improve-)
     * [Python version](#python-version)
     * [License](#license)
 
 <!-- table of contents created by Adrian Bonnet, see https://github.com/Relex12/Markdown-Table-of-Contents for more -->
-
-## Documentation
-
-Word-machine is based on three modules. You can check out their documentation online here:
-
-* [`dictionary.py`](https://relex12.github.io/Word-machine/doc/dictionary.html)
-* [`generation.py`](https://relex12.github.io/Word-machine/doc/generation.html)
-* [`word-machine.py`](https://relex12.github.io/Word-machine/doc/word-machine.html)
 
 ## Description
 
@@ -100,7 +107,7 @@ A good example of why this is needed is the double letter probability. If a doub
 
 The code provides methods for two dimensional matrix, but the results are pretty dismal.
 
-## Documentation generation
+## Documentation
 
 The documentation is available in the `doc/` folder.
 

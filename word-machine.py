@@ -24,40 +24,40 @@ class MaxAttemptsExceededError(Exception):
     def __init__(self, value):
         self.value = value
 
-########################
-# Arguments processing #
-########################
-
-parser = argparse.ArgumentParser()
-
-parser.add_argument("-v", "--version", action="version", version='1.0')
-parser.add_argument("-d", "--dict", metavar='FILE', nargs='*', help="specify the dictionary files")
-parser.add_argument("-a", "--alpha", metavar='FILE', type=str, help="specify the alphabet file (alphabet is deduced from the dictionary if not specified)")
-parser.add_argument("-w", "--write", metavar='FILE', type=str, help="write the processed dictionary in the specified file")
-parser.add_argument("-o", "--output", metavar='FILE', type=str, help="write generated words in the specified file")
-parser.add_argument("--nb-columns", metavar='NUM', type=int, default=1, help="specify the number of columns tu use to display the generated words")
-parser.add_argument("-f", "--force", action='store_true', help="remove from the dictionary every word with at least one letter not in the alphabet (ignored if --alpha is absent)")
-parser.add_argument("--low-case", action='store_true', help="lowercase every word from the dictionary")
-parser.add_argument("--print-acronyms", action='store_true', help="print acronyms from the dictionary to stdout")
-parser.add_argument("--print-plural", metavar='LANG', type=str, help="print to sdout the plural words whose singular is in the dictionary (depends on the language only FR is available yet)")
-parser.add_argument("--no-acronyms", action='store_true', help="remove acronyms from the dictionary")
-parser.add_argument("--no-plural", metavar='LANG', type=str, help="remove plural words from the dictionary")
-parser.add_argument("-g", "--gen", metavar='NUM', type=int, help="generate as many words as specified (option required for every option below)")
-parser.add_argument("--dim", metavar='NUM', type=int, choices=range(2,3+1), default=3, help="use the specified dimension for the matrix (between 2 and 3)")
-parser.add_argument("-c", "--capitalize", action='store_true', help="capitalize generated words")
-parser.add_argument("-s", "--size", help="specify the length of generated words. SIZE can be NUM (equals) NUM: (less than) :NUM (more than) NUM:NUM (between)")
-parser.add_argument("-p", "--prefix", type=str, help="specify a prefix for all generated words")
-parser.add_argument("-n", "--new", action='store_true', help="generate words that are not in the dictionary and not already generated")
-parser.add_argument("--max_attempts", metavar='NUM', type=int, default=50, help="specify the number of tries to generate a new word before throwing an error")
-
-args = parser.parse_args()
-
-
 #############################
 # Main zone : executed code #
 #############################
 
 if __name__ == '__main__':
+
+########################
+# Arguments processing #
+########################
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("-v", "--version", action="version", version='1.0')
+    parser.add_argument("-d", "--dict", metavar='FILE', nargs='*', help="specify the dictionary files")
+    parser.add_argument("-a", "--alpha", metavar='FILE', type=str, help="specify the alphabet file (alphabet is deduced from the dictionary if not specified)")
+    parser.add_argument("-w", "--write", metavar='FILE', type=str, help="write the processed dictionary in the specified file")
+    parser.add_argument("-o", "--output", metavar='FILE', type=str, help="write generated words in the specified file")
+    parser.add_argument("--nb-columns", metavar='NUM', type=int, default=1, help="specify the number of columns tu use to display the generated words")
+    parser.add_argument("-f", "--force", action='store_true', help="remove from the dictionary every word with at least one letter not in the alphabet (ignored if --alpha is absent)")
+    parser.add_argument("--low-case", action='store_true', help="lowercase every word from the dictionary")
+    parser.add_argument("--print-acronyms", action='store_true', help="print acronyms from the dictionary to stdout")
+    parser.add_argument("--print-plural", metavar='LANG', type=str, help="print to sdout the plural words whose singular is in the dictionary (depends on the language only FR is available yet)")
+    parser.add_argument("--no-acronyms", action='store_true', help="remove acronyms from the dictionary")
+    parser.add_argument("--no-plural", metavar='LANG', type=str, help="remove plural words from the dictionary")
+    parser.add_argument("-g", "--gen", metavar='NUM', type=int, help="generate as many words as specified (option required for every option below)")
+    parser.add_argument("--dim", metavar='NUM', type=int, choices=range(2,3+1), default=3, help="use the specified dimension for the matrix (between 2 and 3)")
+    parser.add_argument("-c", "--capitalize", action='store_true', help="capitalize generated words")
+    parser.add_argument("-s", "--size", help="specify the length of generated words. SIZE can be NUM (equals) NUM: (less than) :NUM (more than) NUM:NUM (between)")
+    parser.add_argument("-p", "--prefix", type=str, help="specify a prefix for all generated words")
+    parser.add_argument("-n", "--new", action='store_true', help="generate words that are not in the dictionary and not already generated")
+    parser.add_argument("--max_attempts", metavar='NUM', type=int, default=50, help="specify the number of tries to generate a new word before throwing an error")
+
+    args = parser.parse_args()
+
 
     # getting dictionary
     dictionary = process_dictionary(open_dictionaries(args.dict))

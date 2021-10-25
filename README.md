@@ -2,6 +2,7 @@
 A word generator from dictionary in Python
 
 * [Word-machine](#word-machine)
+    * [Documentation](#documentation)
     * [Description](#description)
     * [Original idea](#original-idea)
     * [Run the demo](#run-the-demo)
@@ -10,12 +11,20 @@ A word generator from dictionary in Python
     * [Command-line interface options](#command-line-interface-options)
     * [Run the tests](#run-the-tests)
     * [Introduction to the code](#introduction-to-the-code)
-    * [Documentation](#documentation)
+    * [Documentation generation](#documentation-generation)
     * [How to improve ?](#how-to-improve-)
     * [Python version](#python-version)
     * [License](#license)
 
 <!-- table of contents created by Adrian Bonnet, see https://github.com/Relex12/Markdown-Table-of-Contents for more -->
+
+## Documentation
+
+Word-machine is based on three modules. You can check out their documentation online here:
+
+* [`dictionary.py`](https://relex12.github.io/Word-machine/doc/dictionary.html)
+* [`generation.py`](https://relex12.github.io/Word-machine/doc/generation.html)
+* [`word-machine.py`](https://relex12.github.io/Word-machine/doc/word-machine.html)
 
 ## Description
 
@@ -31,7 +40,7 @@ Please make sure to watch his video : [La machine à inventer des mots (avec Cod
 
 ## Run the demo
 
-One word-machine is installed, you should be able to run `python3 word-machine.py -g 1`, the output will be `HelloWorld!`.
+One word-machine is installed, you should be able to run `python3 word-machine.py -d helloworld.txt -g 1`, the output will be `HelloWorld!`.
 
 ## Dictionary processing
 
@@ -91,7 +100,7 @@ A good example of why this is needed is the double letter probability. If a doub
 
 The code provides methods for two dimensional matrix, but the results are pretty dismal.
 
-## Documentation
+## Documentation generation
 
 The documentation is available in the `doc/` folder.
 

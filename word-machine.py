@@ -145,11 +145,11 @@ if __name__ == '__main__':
                 word = generate_word_2D(matrix, alphabet, prefix)
             else:
                 word = generate_word_3D(matrix, alphabet, prefix)
+            if args.capitalize:
+                word = word.capitalize()
             if (min_len <= len(word) and len(word) <= max_len) \
             and (not args.new or args.new and not word in dictionary) \
             and not word in word_list :
-                if args.capitalize:
-                    word = word.capitalize()
                 word_list.append(word)
                 nb_word_added += 1
                 failed_attempts = 0

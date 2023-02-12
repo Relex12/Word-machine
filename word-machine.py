@@ -146,7 +146,8 @@ if __name__ == '__main__':
             else:
                 word = generate_word_3D(matrix, alphabet, prefix)
             if (min_len <= len(word) and len(word) <= max_len) \
-            and (args.new and not word in dictionary) or not word in word_list :
+            and (not args.new or args.new and not word in dictionary) \
+            and not word in word_list :
                 if args.capitalize:
                     word = word.capitalize()
                 word_list.append(word)

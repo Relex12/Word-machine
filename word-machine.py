@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 ## This module allows you to **execute** the code and manages command-line options.
 """

@@ -10,13 +10,6 @@ from sys import maxsize
 from generation import *
 from dictionary import *
 
-class MaxAttemptsExceededError(Exception):
-    """
-    a `MaxAttemptsExceededError` is raised when the generation of a new word failed more times than the maximum number of attempts, based on the given generation rules.
-    * **value** is the maximum number of attempts
-    """
-    def __init__(self, value):
-        self.value = value
 
 #############################
 # Main zone : executed code #
@@ -37,7 +30,7 @@ if __name__ == '__main__':
     parser.add_argument("-o", "--output", metavar='FILE', type=str, help="write generated words in the specified file")
     parser.add_argument("--nb-columns", metavar='NUM', type=int, default=1, help="specify the number of columns tu use to display the generated words")
     parser.add_argument("-f", "--force", action='store_true', help="remove from the dictionary every word with at least one letter not in the alphabet (ignored if --alpha is absent)")
-    parser.add_argument("--low-case", action='store_true', help="lowercase every word from the dictionary")
+    parser.add_argument("-l", "--lowercase", action='store_true', help="lowercase every word from the dictionary")
     parser.add_argument("--print-acronyms", action='store_true', help="print acronyms from the dictionary to stdout")
     parser.add_argument("--print-plural", metavar='LANG', type=str, help="print to sdout the plural words whose singular is in the dictionary (depends on the language only FR is available yet)")
     parser.add_argument("--no-acronyms", action='store_true', help="remove acronyms from the dictionary")
@@ -49,7 +42,7 @@ if __name__ == '__main__':
     parser.add_argument("-a", "--average-size", metavar='PER', type=int, default=85, choices=range(1,100), help="if no size is specified, length of generated words is determined by the average length in the dictionary, default is 85 percent")
     parser.add_argument("-p", "--prefix", type=str, help="specify a prefix for all generated words")
     parser.add_argument("-n", "--new", action='store_true', help="generate words that are not in the dictionary and not already generated")
-    parser.add_argument("--max_attempts", metavar='NUM', type=int, default=50, help="specify the number of tries to generate a new word before throwing an error")
+    parser.add_argument("-m", "--max-attempts", metavar='NUM', type=int, default=50, help="specify the number of tries to generate a new word before throwing an error")
 
     args = parser.parse_args()
 
@@ -66,7 +59,7 @@ if __name__ == '__main__':
     if args.no_acronyms:
         dictionary = remove_acronyms(dictionary)
 
-    if args.low_case:
+    if args.lowercase:
         dictionary = lower_case_words(dictionary)
 
     if args.no_plural is not None:
@@ -132,26 +125,26 @@ if __name__ == '__main__':
         else:
             (min_len, max_len) = get_average_size(dictionary, args.average_size)
 
-        nb_word_added = 0
+        # word generation
         failed_attempts = 0
-        number_of_words = args.gen
-        while nb_word_added != number_of_words:
+        nb_word_to_gen = args.gen
+        while len(word_list) != nb_word_to_gen:
             if args.dim == 2:
                 word = generate_word_2D(matrix, alphabet, prefix)
             else:
                 word = generate_word_3D(matrix, alphabet, prefix)
+            # check word compliancy
             if args.capitalize:
                 word = word.capitalize()
             if (min_len <= len(word) and len(word) <= max_len) \
             and (not args.new or args.new and not word in dictionary) \
             and not word in word_list :
                 word_list.append(word)
-                nb_word_added += 1
                 failed_attempts = 0
             else:
                 failed_attempts += 1
                 if failed_attempts >= args.max_attempts:
-                    raise MaxAttemptsExceededError (args.max_attempts)
+                    raise Exception(f"maximum number of attempts exceeded: generation failed {args.max_attempts} times in a raw, maybe check the generation arguments or increase this value with --max-attempts")
 
 
         column_word_list = [[]]

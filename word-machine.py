@@ -10,14 +10,6 @@ from sys import maxsize
 from generation import *
 from dictionary import *
 
-class SizeValueError(Exception):
-    """
-    a `SizeValueError` is raised when the argument given to the `--size` option is not one of the followings : `NUM`, `:NUM`, `NUM:` or `NUM:NUM`.
-    * **value** is the argument that did not match any possible value of the `--size` option
-    """
-    def __init__(self, value):
-        self.value = value
-
 class MaxAttemptsExceededError(Exception):
     """
     a `MaxAttemptsExceededError` is raised when the generation of a new word failed more times than the maximum number of attempts, based on the given generation rules.
@@ -40,7 +32,7 @@ if __name__ == '__main__':
 
     parser.add_argument("-v", "--version", action="version", version='1.0')
     parser.add_argument("-d", "--dict", metavar='FILE', nargs='*', help="specify the dictionary files")
-    parser.add_argument("-a", "--alpha", metavar='FILE', type=str, help="specify the alphabet file (alphabet is deduced from the dictionary if not specified)")
+    parser.add_argument("--alpha", metavar='FILE', type=str, help="specify the alphabet file (alphabet is deduced from the dictionary if not specified)")
     parser.add_argument("-w", "--write", metavar='FILE', type=str, help="write the processed dictionary in the specified file")
     parser.add_argument("-o", "--output", metavar='FILE', type=str, help="write generated words in the specified file")
     parser.add_argument("--nb-columns", metavar='NUM', type=int, default=1, help="specify the number of columns tu use to display the generated words")
@@ -53,7 +45,8 @@ if __name__ == '__main__':
     parser.add_argument("-g", "--gen", metavar='NUM', type=int, help="generate as many words as specified (option required for every option below)")
     parser.add_argument("--dim", metavar='NUM', type=int, choices=range(2,3+1), default=3, help="use the specified dimension for the matrix (between 2 and 3)")
     parser.add_argument("-c", "--capitalize", action='store_true', help="capitalize generated words")
-    parser.add_argument("-s", "--size", help="specify the length of generated words. SIZE can be NUM (equals) NUM: (less than) :NUM (more than) NUM:NUM (between)")
+    parser.add_argument("-s", "--size", help="specify the length of generated words. SIZE can be 'NUM' (equals) 'NUM:' (less than) ':NUM' (more than) 'NUM:NUM' (between) or ':' (any)")
+    parser.add_argument("-a", "--average-size", metavar='PER', type=int, default=85, choices=range(1,100), help="if no size is specified, length of generated words is determined by the average length in the dictionary, default is 85 percent")
     parser.add_argument("-p", "--prefix", type=str, help="specify a prefix for all generated words")
     parser.add_argument("-n", "--new", action='store_true', help="generate words that are not in the dictionary and not already generated")
     parser.add_argument("--max_attempts", metavar='NUM', type=int, default=50, help="specify the number of tries to generate a new word before throwing an error")
@@ -118,26 +111,26 @@ if __name__ == '__main__':
         if prefix:
             prefix = args.prefix
 
-
-        size_option = args.size is not None
+        # size processing
         min_len = 0
         max_len = maxsize
-        if size_option:
-            size_option = args.size
-            if ':' == size_option:
-                raise SizeValueError (size_option)
-            elif not ':' in size_option:
-                min_len = max(int(size_option), min_len)
-                max_len = min(int(size_option), max_len)
-            elif size_option.startswith(':'):
-                max_len = int(size_option[1:])
-            elif size_option.endswith(':'):
-                min_len = int(size_option[:-1])
+        if args.size is not None:
+            if ':' == args.size:
+                pass
+            elif not ':' in args.size:
+                min_len = max(int(args.size), min_len)
+                max_len = min(int(args.size), max_len)
+            elif args.size.startswith(':'):
+                max_len = int(args.size[1:])
+            elif args.size.endswith(':'):
+                min_len = int(args.size[:-1])
             else:
-                min_len = max(int(size_option.split(':')[0]), min_len)
-                max_len = min(int(size_option.split(':')[-1]), max_len)
+                min_len = max(int(args.size.split(':')[0]), min_len)
+                max_len = min(int(args.size.split(':')[-1]), max_len)
             if max_len < min_len:
-                raise SizeValueError (size_option)
+                raise Exception(f"size value error: {min_len} is greater than {max_len}")
+        else:
+            (min_len, max_len) = get_average_size(dictionary, args.average_size)
 
         nb_word_added = 0
         failed_attempts = 0

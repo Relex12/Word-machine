@@ -2,6 +2,9 @@
 ## This module allows you to **manage** input and output files and to **process** the dictionary.
 """
 
+from statistics import quantiles
+from math import ceil
+
 ####################################
 # Input and output file management #
 ####################################
@@ -94,6 +97,18 @@ def process_dictionary (dictionary):
     * **return** (*list*) : the sorted dictionary without duplicated words
     """
     return sorted(set(dictionary))
+
+def get_average_size(dictionary, percent):
+    """
+    `get_average_size()` gets the minimum and maximum size values for which a percentage of words in dictionary lie between them.
+
+    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **percent** (*int*) : the percentage of words within the interval 
+    * **return** (*list*) : the minimum and maximum size values
+    """
+    dict_len = [len(word) for word in dictionary]
+    n=ceil(2*100/(100-percent))
+    return (quantiles(dict_len, n=n)[0], quantiles(dict_len, n=n)[-1])
 
 def remove_missing_letters(dictionary, missing_letters):
     """

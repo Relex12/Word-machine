@@ -3,7 +3,7 @@
 """
 
 from statistics import quantiles
-from math import ceil
+from fractions import Fraction
 
 ####################################
 # Input and output file management #
@@ -106,9 +106,14 @@ def get_average_size(dictionary, percent):
     * **percent** (*int*) : the percentage of words within the interval 
     * **return** (*list*) : the minimum and maximum size values
     """
+    # p: percentage (0<p<1)
+    # n: number of quantiles
+    # o: offset on each side
     dict_len = [len(word) for word in dictionary]
-    n=ceil(2*100/(100-percent))
-    return (quantiles(dict_len, n=n)[0], quantiles(dict_len, n=n)[-1])
+    p=percent/100
+    (a,b)=Fraction(p).limit_denominator(1000).as_integer_ratio()
+    (o,n)=(b-a,2*b) if (b-a)%2 == 1 else ((b-a)//2,b)
+    return (quantiles(dict_len, n=n)[o-1], quantiles(dict_len, n=n)[-o])
 
 def remove_missing_letters(dictionary, missing_letters):
     """

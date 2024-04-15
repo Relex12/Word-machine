@@ -23,8 +23,15 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-v", "--version", action="version", version='1.0')
     parser.add_argument("-d", "--dict", metavar='FILE', nargs='*', help="specify the dictionary files")
+    parser.add_argument("-g", "--gen", metavar='NUM', type=int, help="generate as many words as specified (option required for every option below)")
+    parser.add_argument("--dim", metavar='NUM', type=int, choices=range(2,6), default=3, help="use the specified dimension for the matrix (between 2 and 3)")
+    parser.add_argument("-n", "--new", action='store_true', help="generate words that are not in the dictionary and not already generated")
+    parser.add_argument("-p", "--prefix", type=str, default='', help="specify a prefix for all generated words")
+    parser.add_argument("-c", "--capitalize", action='store_true', help="capitalize generated words")
+    parser.add_argument("-s", "--size", help="specify the length of generated words. SIZE can be 'NUM' (equals) 'NUM:' (less than) ':NUM' (more than) 'NUM:NUM' (between) or ':' (any)")
+    parser.add_argument("-a", "--average-size", metavar='PER', type=int, default=85, choices=range(1,100), help="if no size is specified, length of generated words is determined by the average length in the dictionary, default is 85 percent")
+    parser.add_argument("-m", "--max-attempts", metavar='NUM', type=int, default=50, help="specify the number of tries to generate a new word before throwing an error")
     parser.add_argument("--alpha", metavar='FILE', type=str, help="specify the alphabet file (alphabet is deduced from the dictionary if not specified)")
     parser.add_argument("-w", "--write", metavar='FILE', type=str, help="write the processed dictionary in the specified file")
     parser.add_argument("-o", "--output", metavar='FILE', type=str, help="write generated words in the specified file")
@@ -35,14 +42,6 @@ if __name__ == '__main__':
     parser.add_argument("--print-plural", metavar='LANG', type=str, help="print to sdout the plural words whose singular is in the dictionary (depends on the language only FR is available yet)")
     parser.add_argument("--no-acronyms", action='store_true', help="remove acronyms from the dictionary")
     parser.add_argument("--no-plural", metavar='LANG', type=str, help="remove plural words from the dictionary")
-    parser.add_argument("-g", "--gen", metavar='NUM', type=int, help="generate as many words as specified (option required for every option below)")
-    parser.add_argument("--dim", metavar='NUM', type=int, choices=range(2,6), default=3, help="use the specified dimension for the matrix (between 2 and 3)")
-    parser.add_argument("-c", "--capitalize", action='store_true', help="capitalize generated words")
-    parser.add_argument("-s", "--size", help="specify the length of generated words. SIZE can be 'NUM' (equals) 'NUM:' (less than) ':NUM' (more than) 'NUM:NUM' (between) or ':' (any)")
-    parser.add_argument("-a", "--average-size", metavar='PER', type=int, default=85, choices=range(1,100), help="if no size is specified, length of generated words is determined by the average length in the dictionary, default is 85 percent")
-    parser.add_argument("-p", "--prefix", type=str, default='', help="specify a prefix for all generated words")
-    parser.add_argument("-n", "--new", action='store_true', help="generate words that are not in the dictionary and not already generated")
-    parser.add_argument("-m", "--max-attempts", metavar='NUM', type=int, default=50, help="specify the number of tries to generate a new word before throwing an error")
 
     args = parser.parse_args()
 

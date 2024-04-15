@@ -133,8 +133,8 @@ def find_separator(alphabet):
     """
     `find_separator()` gets the first char in the list above that is not in the alphabet, if no such character exists, an exception is raised.
 
-    * **alphabet** (*list*) : the used alphabet (from input file or from dictionary)
-    * **return** (*char*) : the first separator that is not in the alphabet
+    * **alphabet** (*list*): the used alphabet (from input file or from dictionary)
+    * **return** (*char*): the first separator that is not in the alphabet
     """
     for s in separator_list:
         if s not in alphabet:
@@ -145,10 +145,10 @@ def build_ND_matrix(dictionary, alphabet, N):
     """
     `build_ND_matrix()` initiate and fill a N dimension matrix (dict of dict object) by browsing the dictionary.
 
-    * **dictionary** (*list*) : the input dictionary (after processing)
-    * **alphabet** (*list*) : the used alphabet (from input file or from dictionary)
-    * **N** (*int*) : the dimension of the matrix
-    * **return** (*dict*) : the matrix representing the probability of letter chaining each other
+    * **dictionary** (*list*): the input dictionary (after processing)
+    * **alphabet** (*list*): the used alphabet (from input file or from dictionary)
+    * **N** (*int*): the dimension of the matrix
+    * **return** (*dict*): the matrix representing the probability of letter chaining each other
     """
     separator = alphabet[-1]
 
@@ -175,11 +175,11 @@ def generate_word_ND(matrix, alphabet, prefix, N):
     """
     `generate_word_ND()` generates a word used the `random.choices()` method uppon the ND matrix in the last letter column.
 
-    * **matrix** (*dict*) : the matrix representing the probability of letter chaining each other
-    * **alphabet** (*list*) : the used alphabet (from input file or from dictionary)
-    * **prefix** (*str*) : the prefix requested for the generated words
-    * **N** (*int*) : the dimension of the matrix
-    * **return** (*str*) : the generated word (length variable)
+    * **matrix** (*dict*): the matrix representing the probability of letter chaining each other
+    * **alphabet** (*list*): the used alphabet (from input file or from dictionary)
+    * **prefix** (*str*): the prefix requested for the generated words
+    * **N** (*int*): the dimension of the matrix
+    * **return** (*str*): the generated word (length variable)
     """
     separator = alphabet[-1]
 

@@ -13,8 +13,8 @@ def open_alphabet (filename):
     """
     `open_alphabet()` gets the input alphabet from a file.
 
-    * **filename** (*str*) : the name of the file to open (`read` mode)
-    * **return** (*list*) : the input alphabet
+    * **filename** (*str*): the name of the file to open (`read` mode)
+    * **return** (*list*): the input alphabet
     """
     f = open(filename, "r")
     alphabet = f.read().split(' ')
@@ -28,8 +28,8 @@ def open_dictionaries(filenames):
     """
     `open_dictionary()` gets the input dictionary from a file.
 
-    * **filenames** (*list*) : the list of names of files to open (`read` mode)
-    * **return** (*list*) : the input dictionary
+    * **filenames** (*list*): the list of names of files to open (`read` mode)
+    * **return** (*list*): the input dictionary
     """
     for filename in filenames:
         f = open(filename, "r")
@@ -47,8 +47,8 @@ def get_alphabet_from_dict(dictionary):
     """
     `get_alphabet_from_dict()` gets the alphabet from the dictionary by adding each used letter.
 
-    * **dictionary** (*list*) : the input dictionary (before processing)
-    * **return** (*list*) : the alphabet based on the letters used in the dictionary
+    * **dictionary** (*list*): the input dictionary (before processing)
+    * **return** (*list*): the alphabet based on the letters used in the dictionary
     """
     alphabet = []
     for word in dictionary:
@@ -64,8 +64,8 @@ def write_clean_dictionary(dictionary, filename):
     """
     `write_clean_dictionary()` writes the processed dictionary in a file.
 
-    * **dictionary** (*list*) : the input dictionary (after processing)
-    * **filename** (*str*) : the name of the file to open (`write` mode)
+    * **dictionary** (*list*): the input dictionary (after processing)
+    * **filename** (*str*): the name of the file to open (`write` mode)
     * **return** (*None*)
     """
     f = open(filename, 'w')
@@ -77,8 +77,8 @@ def write_generated_words(word_list, filename):
     """
     `write_generated_words()` writes the list of generated words in a file.
 
-    * **word_list** (*str*) : the string that contain all generated words
-    * **filename** (*str*) : the name of the file to open (`write` mode)
+    * **word_list** (*str*): the string that contain all generated words
+    * **filename** (*str*): the name of the file to open (`write` mode)
     * **return** (*None*)
     """
     f = open(filename, 'w')
@@ -93,8 +93,8 @@ def process_dictionary (dictionary):
     """
     `process_dictionary()` sorts the dictionary and removes duplicated words.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **return** (*list*) : the sorted dictionary without duplicated words
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **return** (*list*): the sorted dictionary without duplicated words
     """
     return sorted(set(dictionary))
 
@@ -102,9 +102,9 @@ def get_average_size(dictionary, percent):
     """
     `get_average_size()` gets the minimum and maximum size values for which a percentage of words in dictionary lie between them.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **percent** (*int*) : the percentage of words within the interval 
-    * **return** (*list*) : the minimum and maximum size values
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **percent** (*int*): the percentage of words within the interval 
+    * **return** (*list*): the minimum and maximum size values
     """
     # p: percentage (0<p<1)
     # n: number of quantiles
@@ -119,9 +119,9 @@ def remove_missing_letters(dictionary, missing_letters):
     """
     `get_missing_letters()` removes from the dictionary every word that uses at least one letter that is not in the alphabet.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **missing_letters** (*list*) : letters used in the dictionary that are not in the alphabet
-    * **return** (*list*) : the dictionary without any word that contain one word from **missing_letters**
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **missing_letters** (*list*): letters used in the dictionary that are not in the alphabet
+    * **return** (*list*): the dictionary without any word that contain one word from **missing_letters**
     """
     words_to_del = []
     for letter in missing_letters:
@@ -137,9 +137,9 @@ def get_missing_letters (dictionary, alphabet):
     """
     `get_missing_letters()` gets every word from the dictionary that uses at least one letter that is not in the alphabet.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **alphabet** (*list*) : the used alphabet (from input file or from dictionary)
-    * **return** (*list*) : the list of letters used at least once in the dictionary that are not in the alphabet
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **alphabet** (*list*): the used alphabet (from input file or from dictionary)
+    * **return** (*list*): the list of letters used at least once in the dictionary that are not in the alphabet
     """
     missing_letter = []
     for word in dictionary:
@@ -152,8 +152,8 @@ def print_plural_words (dictionary, lang):
     """
     `print_plural_words()` prints every word from the dictionary that is already in the dictionary in singular form.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **lang** (*str*) : the language used to follow plural rules (only `FR` is available yet)
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **lang** (*str*): the language used to follow plural rules (only `FR` is available yet)
     * **return** (*None*)
     """
     if lang == 'fr':
@@ -170,9 +170,9 @@ def remove_plural_words (dictionary, lang):
     """
     `remove_plural_words()` removes from the dictionary every word that is already in the dictionary in singular form.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **lang** (*str*) : the language used to follow plural rules (only `FR` is available yet)
-    * **return** (*list*) : the dictionary without duplicated words in singular / plural forms
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **lang** (*str*): the language used to follow plural rules (only `FR` is available yet)
+    * **return** (*list*): the dictionary without duplicated words in singular / plural forms
     """
     words_to_del = []
     if lang == 'fr':
@@ -193,8 +193,8 @@ def lower_case_words(dictionary):
     """
     `lower_case_words()` lower-cases every word from the dictionary.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **return** (*list*) : the dictionary with each word lower-cased
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **return** (*list*): the dictionary with each word lower-cased
     """
     return ([word.lower() for word in dictionary])
 
@@ -203,7 +203,7 @@ def print_acronyms (dictionary):
     `print_acronyms()` prints every acronyms from the dictionary.
     An acronyms is a word such as `word == word.upper()`.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **dictionary** (*list*): the input dictionary (while processing)
     * **return** (*None*)
     """
     for word in dictionary:
@@ -215,8 +215,8 @@ def remove_acronyms (dictionary):
     `remove_acronyms()` removes every acronyms from the dictionary.
     An acronyms is a word such as `word == word.upper()`.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **return** (*list*) : the dictionary without acronyms
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **return** (*list*): the dictionary without acronyms
     """
     words_to_del = []
     for word in dictionary:

@@ -27,31 +27,17 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#34;&#34;&#34;
+<pre><code class="python">#!/usr/bin/env python3
+
+&#34;&#34;&#34;
 ## This module allows you to **execute** the code and manages command-line options.
 &#34;&#34;&#34;
 
-import argparse
+from argparse import ArgumentParser
 from sys import maxsize
 
 from generation import *
 from dictionary import *
-
-class SizeValueError(Exception):
-    &#34;&#34;&#34;
-    a `SizeValueError` is raised when the argument given to the `--size` option is not one of the followings : `NUM`, `:NUM`, `NUM:` or `NUM:NUM`.
-    * **value** is the argument that did not match any possible value of the `--size` option
-    &#34;&#34;&#34;
-    def __init__(self, value):
-        self.value = value
-
-class MaxAttemptsExceededError(Exception):
-    &#34;&#34;&#34;
-    a `MaxAttemptsExceededError` is raised when the generation of a new word failed more times than the maximum number of attempts, based on the given generation rules.
-    * **value** is the maximum number of attempts
-    &#34;&#34;&#34;
-    def __init__(self, value):
-        self.value = value
 
 #############################
 # Main zone : executed code #
@@ -63,30 +49,29 @@ if __name__ == &#39;__main__&#39;:
 # Arguments processing #
 ########################
 
-    parser = argparse.ArgumentParser()
+    parser = ArgumentParser()
 
-    parser.add_argument(&#34;-v&#34;, &#34;--version&#34;, action=&#34;version&#34;, version=&#39;1.0&#39;)
     parser.add_argument(&#34;-d&#34;, &#34;--dict&#34;, metavar=&#39;FILE&#39;, nargs=&#39;*&#39;, help=&#34;specify the dictionary files&#34;)
-    parser.add_argument(&#34;-a&#34;, &#34;--alpha&#34;, metavar=&#39;FILE&#39;, type=str, help=&#34;specify the alphabet file (alphabet is deduced from the dictionary if not specified)&#34;)
+    parser.add_argument(&#34;-g&#34;, &#34;--gen&#34;, metavar=&#39;NUM&#39;, type=int, help=&#34;generate as many words as specified (option required for every option below)&#34;)
+    parser.add_argument(&#34;--dim&#34;, metavar=&#39;NUM&#39;, type=int, choices=range(2,6), default=3, help=&#34;use the specified dimension for the matrix (between 2 and 3)&#34;)
+    parser.add_argument(&#34;-n&#34;, &#34;--new&#34;, action=&#39;store_true&#39;, help=&#34;generate words that are not in the dictionary and not already generated&#34;)
+    parser.add_argument(&#34;-p&#34;, &#34;--prefix&#34;, type=str, default=&#39;&#39;, help=&#34;specify a prefix for all generated words&#34;)
+    parser.add_argument(&#34;-c&#34;, &#34;--capitalize&#34;, action=&#39;store_true&#39;, help=&#34;capitalize generated words&#34;)
+    parser.add_argument(&#34;-s&#34;, &#34;--size&#34;, help=&#34;specify the length of generated words. SIZE can be &#39;NUM&#39; (equals) &#39;NUM:&#39; (less than) &#39;:NUM&#39; (more than) &#39;NUM:NUM&#39; (between) or &#39;:&#39; (any)&#34;)
+    parser.add_argument(&#34;-a&#34;, &#34;--average-size&#34;, metavar=&#39;PER&#39;, type=int, default=85, choices=range(1,100), help=&#34;if no size is specified, length of generated words is determined by the average length in the dictionary, default is 85 percent&#34;)
+    parser.add_argument(&#34;-m&#34;, &#34;--max-attempts&#34;, metavar=&#39;NUM&#39;, type=int, default=50, help=&#34;specify the number of tries to generate a new word before throwing an error&#34;)
+    parser.add_argument(&#34;--alpha&#34;, metavar=&#39;FILE&#39;, type=str, help=&#34;specify the alphabet file (alphabet is deduced from the dictionary if not specified)&#34;)
     parser.add_argument(&#34;-w&#34;, &#34;--write&#34;, metavar=&#39;FILE&#39;, type=str, help=&#34;write the processed dictionary in the specified file&#34;)
     parser.add_argument(&#34;-o&#34;, &#34;--output&#34;, metavar=&#39;FILE&#39;, type=str, help=&#34;write generated words in the specified file&#34;)
     parser.add_argument(&#34;--nb-columns&#34;, metavar=&#39;NUM&#39;, type=int, default=1, help=&#34;specify the number of columns tu use to display the generated words&#34;)
     parser.add_argument(&#34;-f&#34;, &#34;--force&#34;, action=&#39;store_true&#39;, help=&#34;remove from the dictionary every word with at least one letter not in the alphabet (ignored if --alpha is absent)&#34;)
-    parser.add_argument(&#34;--low-case&#34;, action=&#39;store_true&#39;, help=&#34;lowercase every word from the dictionary&#34;)
+    parser.add_argument(&#34;-l&#34;, &#34;--lowercase&#34;, action=&#39;store_true&#39;, help=&#34;lowercase every word from the dictionary&#34;)
     parser.add_argument(&#34;--print-acronyms&#34;, action=&#39;store_true&#39;, help=&#34;print acronyms from the dictionary to stdout&#34;)
     parser.add_argument(&#34;--print-plural&#34;, metavar=&#39;LANG&#39;, type=str, help=&#34;print to sdout the plural words whose singular is in the dictionary (depends on the language only FR is available yet)&#34;)
     parser.add_argument(&#34;--no-acronyms&#34;, action=&#39;store_true&#39;, help=&#34;remove acronyms from the dictionary&#34;)
     parser.add_argument(&#34;--no-plural&#34;, metavar=&#39;LANG&#39;, type=str, help=&#34;remove plural words from the dictionary&#34;)
-    parser.add_argument(&#34;-g&#34;, &#34;--gen&#34;, metavar=&#39;NUM&#39;, type=int, help=&#34;generate as many words as specified (option required for every option below)&#34;)
-    parser.add_argument(&#34;--dim&#34;, metavar=&#39;NUM&#39;, type=int, choices=range(2,3+1), default=3, help=&#34;use the specified dimension for the matrix (between 2 and 3)&#34;)
-    parser.add_argument(&#34;-c&#34;, &#34;--capitalize&#34;, action=&#39;store_true&#39;, help=&#34;capitalize generated words&#34;)
-    parser.add_argument(&#34;-s&#34;, &#34;--size&#34;, help=&#34;specify the length of generated words. SIZE can be NUM (equals) NUM: (less than) :NUM (more than) NUM:NUM (between)&#34;)
-    parser.add_argument(&#34;-p&#34;, &#34;--prefix&#34;, type=str, help=&#34;specify a prefix for all generated words&#34;)
-    parser.add_argument(&#34;-n&#34;, &#34;--new&#34;, action=&#39;store_true&#39;, help=&#34;generate words that are not in the dictionary and not already generated&#34;)
-    parser.add_argument(&#34;--max_attempts&#34;, metavar=&#39;NUM&#39;, type=int, default=50, help=&#34;specify the number of tries to generate a new word before throwing an error&#34;)
 
     args = parser.parse_args()
-
 
     # getting dictionary
     dictionary = process_dictionary(open_dictionaries(args.dict))
@@ -100,7 +85,7 @@ if __name__ == &#39;__main__&#39;:
     if args.no_acronyms:
         dictionary = remove_acronyms(dictionary)
 
-    if args.low_case:
+    if args.lowercase:
         dictionary = lower_case_words(dictionary)
 
     if args.no_plural is not None:
@@ -119,8 +104,6 @@ if __name__ == &#39;__main__&#39;:
     else:
         alphabet = get_alphabet_from_dict (dictionary)
 
-
-
     if args.write is not None:
         filename = args.write
         write_clean_dictionary (dictionary, filename)
@@ -132,60 +115,63 @@ if __name__ == &#39;__main__&#39;:
 
     if args.gen is not None:
 
-        if args.dim == 2:
-            matrix = build_2D_matrix(dictionary, alphabet)
-        else:
-            matrix = build_3D_matrix(dictionary, alphabet)
+        if &#39;&#39; in alphabet:
+            alphabet.remove(&#39;&#39;)
+        alphabet.append(find_separator(alphabet))
 
+        matrix = build_ND_matrix(dictionary, alphabet, args.dim)
 
-        output_file = args.output is not None
         word_list = []
 
-        prefix = args.prefix is not None
-        if prefix:
-            prefix = args.prefix
-
-
-        size_option = args.size is not None
+        # size processing
         min_len = 0
         max_len = maxsize
-        if size_option:
-            size_option = args.size
-            if &#39;:&#39; == size_option:
-                raise SizeValueError (size_option)
-            elif not &#39;:&#39; in size_option:
-                min_len = max(int(size_option), min_len)
-                max_len = min(int(size_option), max_len)
-            elif size_option.startswith(&#39;:&#39;):
-                max_len = int(size_option[1:])
-            elif size_option.endswith(&#39;:&#39;):
-                min_len = int(size_option[:-1])
+        if args.size is not None:
+            if &#39;:&#39; == args.size:
+                pass
+            elif not &#39;:&#39; in args.size:
+                min_len = max(int(args.size), min_len)
+                max_len = min(int(args.size), max_len)
+            elif args.size.startswith(&#39;:&#39;):
+                max_len = int(args.size[1:])
+            elif args.size.endswith(&#39;:&#39;):
+                min_len = int(args.size[:-1])
             else:
-                min_len = max(int(size_option.split(&#39;:&#39;)[0]), min_len)
-                max_len = min(int(size_option.split(&#39;:&#39;)[-1]), max_len)
+                min_len = max(int(args.size.split(&#39;:&#39;)[0]), min_len)
+                max_len = min(int(args.size.split(&#39;:&#39;)[-1]), max_len)
             if max_len &lt; min_len:
-                raise SizeValueError (size_option)
+                raise Exception(f&#34;size value error: {min_len} is greater than {max_len}&#34;)
+        else:
+            (min_len, max_len) = get_average_size(dictionary, args.average_size)
 
-        nb_word_added = 0
+        # word generation
         failed_attempts = 0
-        number_of_words = args.gen
-        while nb_word_added != number_of_words:
-            if args.dim == 2:
-                word = generate_word_2D(matrix, alphabet, prefix)
-            else:
-                word = generate_word_3D(matrix, alphabet, prefix)
-            if (min_len &lt;= len(word) and len(word) &lt;= max_len) \
-            and (args.new and not word in dictionary) or not word in word_list :
-                if args.capitalize:
-                    word = word.capitalize()
-                word_list.append(word)
-                nb_word_added += 1
-                failed_attempts = 0
-            else:
+        error = None
+        nb_word_to_gen = args.gen
+        while len(word_list) != nb_word_to_gen:
+            word = generate_word_ND(matrix, alphabet, args.prefix, args.dim)
+            # check word compliancy
+            if len(word) &lt; min_len or max_len &lt; len(word):
                 failed_attempts += 1
                 if failed_attempts &gt;= args.max_attempts:
-                    raise MaxAttemptsExceededError (args.max_attempts)
+                    error = &#39;size not compliant&#39;
+            elif args.new and word in dictionary:
+                failed_attempts += 1
+                if failed_attempts &gt;= args.max_attempts:
+                    error = &#39;word already in dictionary&#39;
+            elif word in word_list:
+                failed_attempts += 1
+                if failed_attempts &gt;= args.max_attempts:
+                    error = &#39;word already generated&#39;
+            else:
+                word_list.append(word)
+                failed_attempts = 0
 
+            if error is not None:
+                raise Exception(f&#34;maximum number of attempts exceeded: generation failed {args.max_attempts} times in a raw, maybe this value with --max-attempts, last failure due to {error}&#34;)
+
+        if args.capitalize:
+            word_list = [word.capitalize() for word in word_list]
 
         column_word_list = [[]]
 
@@ -202,7 +188,7 @@ if __name__ == &#39;__main__&#39;:
         for row in column_word_list:
             output_words += &#34;  &#34;.join((val.ljust(width) for val, width in zip(row, col_widths))) + &#39;\n&#39;
 
-        if output_file:
+        if args.output is not None:
             filename = args.output
             write_generated_words(output_words, filename)
         else:
@@ -216,59 +202,6 @@ if __name__ == &#39;__main__&#39;:
 <section>
 </section>
 <section>
-<h2 class="section-title" id="header-classes">Classes</h2>
-<dl>
-<dt id="word-machine.MaxAttemptsExceededError"><code class="flex name class">
-<span>class <span class="ident">MaxAttemptsExceededError</span></span>
-<span>(</span><span>value)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>a <code><a title="word-machine.MaxAttemptsExceededError" href="#word-machine.MaxAttemptsExceededError">MaxAttemptsExceededError</a></code> is raised when the generation of a new word failed more times than the maximum number of attempts, based on the given generation rules.
-* <strong>value</strong> is the maximum number of attempts</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class MaxAttemptsExceededError(Exception):
-    &#34;&#34;&#34;
-    a `MaxAttemptsExceededError` is raised when the generation of a new word failed more times than the maximum number of attempts, based on the given generation rules.
-    * **value** is the maximum number of attempts
-    &#34;&#34;&#34;
-    def __init__(self, value):
-        self.value = value</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>builtins.Exception</li>
-<li>builtins.BaseException</li>
-</ul>
-</dd>
-<dt id="word-machine.SizeValueError"><code class="flex name class">
-<span>class <span class="ident">SizeValueError</span></span>
-<span>(</span><span>value)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>a <code><a title="word-machine.SizeValueError" href="#word-machine.SizeValueError">SizeValueError</a></code> is raised when the argument given to the <code>--size</code> option is not one of the followings : <code>NUM</code>, <code>:NUM</code>, <code>NUM:</code> or <code>NUM:NUM</code>.
-* <strong>value</strong> is the argument that did not match any possible value of the <code>--size</code> option</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class SizeValueError(Exception):
-    &#34;&#34;&#34;
-    a `SizeValueError` is raised when the argument given to the `--size` option is not one of the followings : `NUM`, `:NUM`, `NUM:` or `NUM:NUM`.
-    * **value** is the argument that did not match any possible value of the `--size` option
-    &#34;&#34;&#34;
-    def __init__(self, value):
-        self.value = value</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>builtins.Exception</li>
-<li>builtins.BaseException</li>
-</ul>
-</dd>
-</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -279,16 +212,6 @@ if __name__ == &#39;__main__&#39;:
 </ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-classes">Classes</a></h3>
-<ul>
-<li>
-<h4><code><a title="word-machine.MaxAttemptsExceededError" href="#word-machine.MaxAttemptsExceededError">MaxAttemptsExceededError</a></code></h4>
-</li>
-<li>
-<h4><code><a title="word-machine.SizeValueError" href="#word-machine.SizeValueError">SizeValueError</a></code></h4>
-</li>
-</ul>
-</li>
 </ul>
 </nav>
 </main>

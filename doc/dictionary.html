@@ -31,6 +31,9 @@
 ## This module allows you to **manage** input and output files and to **process** the dictionary.
 &#34;&#34;&#34;
 
+from statistics import quantiles
+from fractions import Fraction
+
 ####################################
 # Input and output file management #
 ####################################
@@ -39,8 +42,8 @@ def open_alphabet (filename):
     &#34;&#34;&#34;
     `open_alphabet()` gets the input alphabet from a file.
 
-    * **filename** (*str*) : the name of the file to open (`read` mode)
-    * **return** (*list*) : the input alphabet
+    * **filename** (*str*): the name of the file to open (`read` mode)
+    * **return** (*list*): the input alphabet
     &#34;&#34;&#34;
     f = open(filename, &#34;r&#34;)
     alphabet = f.read().split(&#39; &#39;)
@@ -54,8 +57,8 @@ def open_dictionaries(filenames):
     &#34;&#34;&#34;
     `open_dictionary()` gets the input dictionary from a file.
 
-    * **filenames** (*list*) : the list of names of files to open (`read` mode)
-    * **return** (*list*) : the input dictionary
+    * **filenames** (*list*): the list of names of files to open (`read` mode)
+    * **return** (*list*): the input dictionary
     &#34;&#34;&#34;
     for filename in filenames:
         f = open(filename, &#34;r&#34;)
@@ -73,8 +76,8 @@ def get_alphabet_from_dict(dictionary):
     &#34;&#34;&#34;
     `get_alphabet_from_dict()` gets the alphabet from the dictionary by adding each used letter.
 
-    * **dictionary** (*list*) : the input dictionary (before processing)
-    * **return** (*list*) : the alphabet based on the letters used in the dictionary
+    * **dictionary** (*list*): the input dictionary (before processing)
+    * **return** (*list*): the alphabet based on the letters used in the dictionary
     &#34;&#34;&#34;
     alphabet = []
     for word in dictionary:
@@ -90,8 +93,8 @@ def write_clean_dictionary(dictionary, filename):
     &#34;&#34;&#34;
     `write_clean_dictionary()` writes the processed dictionary in a file.
 
-    * **dictionary** (*list*) : the input dictionary (after processing)
-    * **filename** (*str*) : the name of the file to open (`write` mode)
+    * **dictionary** (*list*): the input dictionary (after processing)
+    * **filename** (*str*): the name of the file to open (`write` mode)
     * **return** (*None*)
     &#34;&#34;&#34;
     f = open(filename, &#39;w&#39;)
@@ -103,8 +106,8 @@ def write_generated_words(word_list, filename):
     &#34;&#34;&#34;
     `write_generated_words()` writes the list of generated words in a file.
 
-    * **word_list** (*str*) : the string that contain all generated words
-    * **filename** (*str*) : the name of the file to open (`write` mode)
+    * **word_list** (*str*): the string that contain all generated words
+    * **filename** (*str*): the name of the file to open (`write` mode)
     * **return** (*None*)
     &#34;&#34;&#34;
     f = open(filename, &#39;w&#39;)
@@ -119,18 +122,35 @@ def process_dictionary (dictionary):
     &#34;&#34;&#34;
     `process_dictionary()` sorts the dictionary and removes duplicated words.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **return** (*list*) : the sorted dictionary without duplicated words
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **return** (*list*): the sorted dictionary without duplicated words
     &#34;&#34;&#34;
     return sorted(set(dictionary))
+
+def get_average_size(dictionary, percent):
+    &#34;&#34;&#34;
+    `get_average_size()` gets the minimum and maximum size values for which a percentage of words in dictionary lie between them.
+
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **percent** (*int*): the percentage of words within the interval 
+    * **return** (*list*): the minimum and maximum size values
+    &#34;&#34;&#34;
+    # p: percentage (0&lt;p&lt;1)
+    # n: number of quantiles
+    # o: offset on each side
+    dict_len = [len(word) for word in dictionary]
+    p=percent/100
+    (a,b)=Fraction(p).limit_denominator(1000).as_integer_ratio()
+    (o,n)=(b-a,2*b) if (b-a)%2 == 1 else ((b-a)//2,b)
+    return (quantiles(dict_len, n=n)[o-1], quantiles(dict_len, n=n)[-o])
 
 def remove_missing_letters(dictionary, missing_letters):
     &#34;&#34;&#34;
     `get_missing_letters()` removes from the dictionary every word that uses at least one letter that is not in the alphabet.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **missing_letters** (*list*) : letters used in the dictionary that are not in the alphabet
-    * **return** (*list*) : the dictionary without any word that contain one word from **missing_letters**
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **missing_letters** (*list*): letters used in the dictionary that are not in the alphabet
+    * **return** (*list*): the dictionary without any word that contain one word from **missing_letters**
     &#34;&#34;&#34;
     words_to_del = []
     for letter in missing_letters:
@@ -146,9 +166,9 @@ def get_missing_letters (dictionary, alphabet):
     &#34;&#34;&#34;
     `get_missing_letters()` gets every word from the dictionary that uses at least one letter that is not in the alphabet.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **alphabet** (*list*) : the used alphabet (from input file or from dictionary)
-    * **return** (*list*) : the list of letters used at least once in the dictionary that are not in the alphabet
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **alphabet** (*list*): the used alphabet (from input file or from dictionary)
+    * **return** (*list*): the list of letters used at least once in the dictionary that are not in the alphabet
     &#34;&#34;&#34;
     missing_letter = []
     for word in dictionary:
@@ -161,8 +181,8 @@ def print_plural_words (dictionary, lang):
     &#34;&#34;&#34;
     `print_plural_words()` prints every word from the dictionary that is already in the dictionary in singular form.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **lang** (*str*) : the language used to follow plural rules (only `FR` is available yet)
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **lang** (*str*): the language used to follow plural rules (only `FR` is available yet)
     * **return** (*None*)
     &#34;&#34;&#34;
     if lang == &#39;fr&#39;:
@@ -179,9 +199,9 @@ def remove_plural_words (dictionary, lang):
     &#34;&#34;&#34;
     `remove_plural_words()` removes from the dictionary every word that is already in the dictionary in singular form.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **lang** (*str*) : the language used to follow plural rules (only `FR` is available yet)
-    * **return** (*list*) : the dictionary without duplicated words in singular / plural forms
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **lang** (*str*): the language used to follow plural rules (only `FR` is available yet)
+    * **return** (*list*): the dictionary without duplicated words in singular / plural forms
     &#34;&#34;&#34;
     words_to_del = []
     if lang == &#39;fr&#39;:
@@ -202,8 +222,8 @@ def lower_case_words(dictionary):
     &#34;&#34;&#34;
     `lower_case_words()` lower-cases every word from the dictionary.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **return** (*list*) : the dictionary with each word lower-cased
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **return** (*list*): the dictionary with each word lower-cased
     &#34;&#34;&#34;
     return ([word.lower() for word in dictionary])
 
@@ -212,7 +232,7 @@ def print_acronyms (dictionary):
     `print_acronyms()` prints every acronyms from the dictionary.
     An acronyms is a word such as `word == word.upper()`.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **dictionary** (*list*): the input dictionary (while processing)
     * **return** (*None*)
     &#34;&#34;&#34;
     for word in dictionary:
@@ -224,8 +244,8 @@ def remove_acronyms (dictionary):
     `remove_acronyms()` removes every acronyms from the dictionary.
     An acronyms is a word such as `word == word.upper()`.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **return** (*list*) : the dictionary without acronyms
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **return** (*list*): the dictionary without acronyms
     &#34;&#34;&#34;
     words_to_del = []
     for word in dictionary:
@@ -250,8 +270,8 @@ def remove_acronyms (dictionary):
 <dd>
 <div class="desc"><p><code><a title="dictionary.get_alphabet_from_dict" href="#dictionary.get_alphabet_from_dict">get_alphabet_from_dict()</a></code> gets the alphabet from the dictionary by adding each used letter.</p>
 <ul>
-<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (before processing)</li>
-<li><strong>return</strong> (<em>list</em>) : the alphabet based on the letters used in the dictionary</li>
+<li><strong>dictionary</strong> (<em>list</em>): the input dictionary (before processing)</li>
+<li><strong>return</strong> (<em>list</em>): the alphabet based on the letters used in the dictionary</li>
 </ul></div>
 <details class="source">
 <summary>
@@ -261,8 +281,8 @@ def remove_acronyms (dictionary):
     &#34;&#34;&#34;
     `get_alphabet_from_dict()` gets the alphabet from the dictionary by adding each used letter.
 
-    * **dictionary** (*list*) : the input dictionary (before processing)
-    * **return** (*list*) : the alphabet based on the letters used in the dictionary
+    * **dictionary** (*list*): the input dictionary (before processing)
+    * **return** (*list*): the alphabet based on the letters used in the dictionary
     &#34;&#34;&#34;
     alphabet = []
     for word in dictionary:
@@ -275,15 +295,47 @@ def remove_acronyms (dictionary):
     return alphabet</code></pre>
 </details>
 </dd>
+<dt id="dictionary.get_average_size"><code class="name flex">
+<span>def <span class="ident">get_average_size</span></span>(<span>dictionary, percent)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="dictionary.get_average_size" href="#dictionary.get_average_size">get_average_size()</a></code> gets the minimum and maximum size values for which a percentage of words in dictionary lie between them.</p>
+<ul>
+<li><strong>dictionary</strong> (<em>list</em>): the input dictionary (while processing)</li>
+<li><strong>percent</strong> (<em>int</em>): the percentage of words within the interval </li>
+<li><strong>return</strong> (<em>list</em>): the minimum and maximum size values</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_average_size(dictionary, percent):
+    &#34;&#34;&#34;
+    `get_average_size()` gets the minimum and maximum size values for which a percentage of words in dictionary lie between them.
+
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **percent** (*int*): the percentage of words within the interval 
+    * **return** (*list*): the minimum and maximum size values
+    &#34;&#34;&#34;
+    # p: percentage (0&lt;p&lt;1)
+    # n: number of quantiles
+    # o: offset on each side
+    dict_len = [len(word) for word in dictionary]
+    p=percent/100
+    (a,b)=Fraction(p).limit_denominator(1000).as_integer_ratio()
+    (o,n)=(b-a,2*b) if (b-a)%2 == 1 else ((b-a)//2,b)
+    return (quantiles(dict_len, n=n)[o-1], quantiles(dict_len, n=n)[-o])</code></pre>
+</details>
+</dd>
 <dt id="dictionary.get_missing_letters"><code class="name flex">
 <span>def <span class="ident">get_missing_letters</span></span>(<span>dictionary, alphabet)</span>
 </code></dt>
 <dd>
 <div class="desc"><p><code><a title="dictionary.get_missing_letters" href="#dictionary.get_missing_letters">get_missing_letters()</a></code> gets every word from the dictionary that uses at least one letter that is not in the alphabet.</p>
 <ul>
-<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (while processing)</li>
-<li><strong>alphabet</strong> (<em>list</em>) : the used alphabet (from input file or from dictionary)</li>
-<li><strong>return</strong> (<em>list</em>) : the list of letters used at least once in the dictionary that are not in the alphabet</li>
+<li><strong>dictionary</strong> (<em>list</em>): the input dictionary (while processing)</li>
+<li><strong>alphabet</strong> (<em>list</em>): the used alphabet (from input file or from dictionary)</li>
+<li><strong>return</strong> (<em>list</em>): the list of letters used at least once in the dictionary that are not in the alphabet</li>
 </ul></div>
 <details class="source">
 <summary>
@@ -293,9 +345,9 @@ def remove_acronyms (dictionary):
     &#34;&#34;&#34;
     `get_missing_letters()` gets every word from the dictionary that uses at least one letter that is not in the alphabet.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **alphabet** (*list*) : the used alphabet (from input file or from dictionary)
-    * **return** (*list*) : the list of letters used at least once in the dictionary that are not in the alphabet
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **alphabet** (*list*): the used alphabet (from input file or from dictionary)
+    * **return** (*list*): the list of letters used at least once in the dictionary that are not in the alphabet
     &#34;&#34;&#34;
     missing_letter = []
     for word in dictionary:
@@ -311,8 +363,8 @@ def remove_acronyms (dictionary):
 <dd>
 <div class="desc"><p><code><a title="dictionary.lower_case_words" href="#dictionary.lower_case_words">lower_case_words()</a></code> lower-cases every word from the dictionary.</p>
 <ul>
-<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (while processing)</li>
-<li><strong>return</strong> (<em>list</em>) : the dictionary with each word lower-cased</li>
+<li><strong>dictionary</strong> (<em>list</em>): the input dictionary (while processing)</li>
+<li><strong>return</strong> (<em>list</em>): the dictionary with each word lower-cased</li>
 </ul></div>
 <details class="source">
 <summary>
@@ -322,8 +374,8 @@ def remove_acronyms (dictionary):
     &#34;&#34;&#34;
     `lower_case_words()` lower-cases every word from the dictionary.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **return** (*list*) : the dictionary with each word lower-cased
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **return** (*list*): the dictionary with each word lower-cased
     &#34;&#34;&#34;
     return ([word.lower() for word in dictionary])</code></pre>
 </details>
@@ -334,8 +386,8 @@ def remove_acronyms (dictionary):
 <dd>
 <div class="desc"><p><code><a title="dictionary.open_alphabet" href="#dictionary.open_alphabet">open_alphabet()</a></code> gets the input alphabet from a file.</p>
 <ul>
-<li><strong>filename</strong> (<em>str</em>) : the name of the file to open (<code>read</code> mode)</li>
-<li><strong>return</strong> (<em>list</em>) : the input alphabet</li>
+<li><strong>filename</strong> (<em>str</em>): the name of the file to open (<code>read</code> mode)</li>
+<li><strong>return</strong> (<em>list</em>): the input alphabet</li>
 </ul></div>
 <details class="source">
 <summary>
@@ -345,8 +397,8 @@ def remove_acronyms (dictionary):
     &#34;&#34;&#34;
     `open_alphabet()` gets the input alphabet from a file.
 
-    * **filename** (*str*) : the name of the file to open (`read` mode)
-    * **return** (*list*) : the input alphabet
+    * **filename** (*str*): the name of the file to open (`read` mode)
+    * **return** (*list*): the input alphabet
     &#34;&#34;&#34;
     f = open(filename, &#34;r&#34;)
     alphabet = f.read().split(&#39; &#39;)
@@ -363,8 +415,8 @@ def remove_acronyms (dictionary):
 <dd>
 <div class="desc"><p><code>open_dictionary()</code> gets the input dictionary from a file.</p>
 <ul>
-<li><strong>filenames</strong> (<em>list</em>) : the list of names of files to open (<code>read</code> mode)</li>
-<li><strong>return</strong> (<em>list</em>) : the input dictionary</li>
+<li><strong>filenames</strong> (<em>list</em>): the list of names of files to open (<code>read</code> mode)</li>
+<li><strong>return</strong> (<em>list</em>): the input dictionary</li>
 </ul></div>
 <details class="source">
 <summary>
@@ -374,8 +426,8 @@ def remove_acronyms (dictionary):
     &#34;&#34;&#34;
     `open_dictionary()` gets the input dictionary from a file.
 
-    * **filenames** (*list*) : the list of names of files to open (`read` mode)
-    * **return** (*list*) : the input dictionary
+    * **filenames** (*list*): the list of names of files to open (`read` mode)
+    * **return** (*list*): the input dictionary
     &#34;&#34;&#34;
     for filename in filenames:
         f = open(filename, &#34;r&#34;)
@@ -397,7 +449,7 @@ def remove_acronyms (dictionary):
 <div class="desc"><p><code><a title="dictionary.print_acronyms" href="#dictionary.print_acronyms">print_acronyms()</a></code> prints every acronyms from the dictionary.
 An acronyms is a word such as <code>word == word.upper()</code>.</p>
 <ul>
-<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (while processing)</li>
+<li><strong>dictionary</strong> (<em>list</em>): the input dictionary (while processing)</li>
 <li><strong>return</strong> (<em>None</em>)</li>
 </ul></div>
 <details class="source">
@@ -409,7 +461,7 @@ An acronyms is a word such as <code>word == word.upper()</code>.</p>
     `print_acronyms()` prints every acronyms from the dictionary.
     An acronyms is a word such as `word == word.upper()`.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
+    * **dictionary** (*list*): the input dictionary (while processing)
     * **return** (*None*)
     &#34;&#34;&#34;
     for word in dictionary:
@@ -423,8 +475,8 @@ An acronyms is a word such as <code>word == word.upper()</code>.</p>
 <dd>
 <div class="desc"><p><code><a title="dictionary.print_plural_words" href="#dictionary.print_plural_words">print_plural_words()</a></code> prints every word from the dictionary that is already in the dictionary in singular form.</p>
 <ul>
-<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (while processing)</li>
-<li><strong>lang</strong> (<em>str</em>) : the language used to follow plural rules (only <code>FR</code> is available yet)</li>
+<li><strong>dictionary</strong> (<em>list</em>): the input dictionary (while processing)</li>
+<li><strong>lang</strong> (<em>str</em>): the language used to follow plural rules (only <code>FR</code> is available yet)</li>
 <li><strong>return</strong> (<em>None</em>)</li>
 </ul></div>
 <details class="source">
@@ -435,8 +487,8 @@ An acronyms is a word such as <code>word == word.upper()</code>.</p>
     &#34;&#34;&#34;
     `print_plural_words()` prints every word from the dictionary that is already in the dictionary in singular form.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **lang** (*str*) : the language used to follow plural rules (only `FR` is available yet)
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **lang** (*str*): the language used to follow plural rules (only `FR` is available yet)
     * **return** (*None*)
     &#34;&#34;&#34;
     if lang == &#39;fr&#39;:
@@ -446,7 +498,8 @@ An acronyms is a word such as <code>word == word.upper()</code>.</p>
             or word[l-1] == &#39;x&#39;and word[:l-1] in dictionary \
             or l &gt; 3 and word[l-3:l] == &#39;aux&#39;and word[:l-3]+&#39;al&#39; in dictionary \
             or l &gt; 3 and word[l-3:l] == &#39;aux&#39;and word[:l-3]+&#39;ail&#39; in dictionary:
-                print(word)</code></pre>
+                print(word)
+    # insert here plural rules from other languages</code></pre>
 </details>
 </dd>
 <dt id="dictionary.process_dictionary"><code class="name flex">
@@ -455,8 +508,8 @@ An acronyms is a word such as <code>word == word.upper()</code>.</p>
 <dd>
 <div class="desc"><p><code><a title="dictionary.process_dictionary" href="#dictionary.process_dictionary">process_dictionary()</a></code> sorts the dictionary and removes duplicated words.</p>
 <ul>
-<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (while processing)</li>
-<li><strong>return</strong> (<em>list</em>) : the sorted dictionary without duplicated words</li>
+<li><strong>dictionary</strong> (<em>list</em>): the input dictionary (while processing)</li>
+<li><strong>return</strong> (<em>list</em>): the sorted dictionary without duplicated words</li>
 </ul></div>
 <details class="source">
 <summary>
@@ -466,8 +519,8 @@ An acronyms is a word such as <code>word == word.upper()</code>.</p>
     &#34;&#34;&#34;
     `process_dictionary()` sorts the dictionary and removes duplicated words.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **return** (*list*) : the sorted dictionary without duplicated words
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **return** (*list*): the sorted dictionary without duplicated words
     &#34;&#34;&#34;
     return sorted(set(dictionary))</code></pre>
 </details>
@@ -479,8 +532,8 @@ An acronyms is a word such as <code>word == word.upper()</code>.</p>
 <div class="desc"><p><code><a title="dictionary.remove_acronyms" href="#dictionary.remove_acronyms">remove_acronyms()</a></code> removes every acronyms from the dictionary.
 An acronyms is a word such as <code>word == word.upper()</code>.</p>
 <ul>
-<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (while processing)</li>
-<li><strong>return</strong> (<em>list</em>) : the dictionary without acronyms</li>
+<li><strong>dictionary</strong> (<em>list</em>): the input dictionary (while processing)</li>
+<li><strong>return</strong> (<em>list</em>): the dictionary without acronyms</li>
 </ul></div>
 <details class="source">
 <summary>
@@ -491,8 +544,8 @@ An acronyms is a word such as <code>word == word.upper()</code>.</p>
     `remove_acronyms()` removes every acronyms from the dictionary.
     An acronyms is a word such as `word == word.upper()`.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **return** (*list*) : the dictionary without acronyms
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **return** (*list*): the dictionary without acronyms
     &#34;&#34;&#34;
     words_to_del = []
     for word in dictionary:
@@ -510,9 +563,9 @@ An acronyms is a word such as <code>word == word.upper()</code>.</p>
 <dd>
 <div class="desc"><p><code><a title="dictionary.get_missing_letters" href="#dictionary.get_missing_letters">get_missing_letters()</a></code> removes from the dictionary every word that uses at least one letter that is not in the alphabet.</p>
 <ul>
-<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (while processing)</li>
-<li><strong>missing_letters</strong> (<em>list</em>) : letters used in the dictionary that are not in the alphabet</li>
-<li><strong>return</strong> (<em>list</em>) : the dictionary without any word that contain one word from <strong>missing_letters</strong></li>
+<li><strong>dictionary</strong> (<em>list</em>): the input dictionary (while processing)</li>
+<li><strong>missing_letters</strong> (<em>list</em>): letters used in the dictionary that are not in the alphabet</li>
+<li><strong>return</strong> (<em>list</em>): the dictionary without any word that contain one word from <strong>missing_letters</strong></li>
 </ul></div>
 <details class="source">
 <summary>
@@ -522,9 +575,9 @@ An acronyms is a word such as <code>word == word.upper()</code>.</p>
     &#34;&#34;&#34;
     `get_missing_letters()` removes from the dictionary every word that uses at least one letter that is not in the alphabet.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **missing_letters** (*list*) : letters used in the dictionary that are not in the alphabet
-    * **return** (*list*) : the dictionary without any word that contain one word from **missing_letters**
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **missing_letters** (*list*): letters used in the dictionary that are not in the alphabet
+    * **return** (*list*): the dictionary without any word that contain one word from **missing_letters**
     &#34;&#34;&#34;
     words_to_del = []
     for letter in missing_letters:
@@ -543,9 +596,9 @@ An acronyms is a word such as <code>word == word.upper()</code>.</p>
 <dd>
 <div class="desc"><p><code><a title="dictionary.remove_plural_words" href="#dictionary.remove_plural_words">remove_plural_words()</a></code> removes from the dictionary every word that is already in the dictionary in singular form.</p>
 <ul>
-<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (while processing)</li>
-<li><strong>lang</strong> (<em>str</em>) : the language used to follow plural rules (only <code>FR</code> is available yet)</li>
-<li><strong>return</strong> (<em>list</em>) : the dictionary without duplicated words in singular / plural forms</li>
+<li><strong>dictionary</strong> (<em>list</em>): the input dictionary (while processing)</li>
+<li><strong>lang</strong> (<em>str</em>): the language used to follow plural rules (only <code>FR</code> is available yet)</li>
+<li><strong>return</strong> (<em>list</em>): the dictionary without duplicated words in singular / plural forms</li>
 </ul></div>
 <details class="source">
 <summary>
@@ -555,9 +608,9 @@ An acronyms is a word such as <code>word == word.upper()</code>.</p>
     &#34;&#34;&#34;
     `remove_plural_words()` removes from the dictionary every word that is already in the dictionary in singular form.
 
-    * **dictionary** (*list*) : the input dictionary (while processing)
-    * **lang** (*str*) : the language used to follow plural rules (only `FR` is available yet)
-    * **return** (*list*) : the dictionary without duplicated words in singular / plural forms
+    * **dictionary** (*list*): the input dictionary (while processing)
+    * **lang** (*str*): the language used to follow plural rules (only `FR` is available yet)
+    * **return** (*list*): the dictionary without duplicated words in singular / plural forms
     &#34;&#34;&#34;
     words_to_del = []
     if lang == &#39;fr&#39;:
@@ -581,8 +634,8 @@ An acronyms is a word such as <code>word == word.upper()</code>.</p>
 <dd>
 <div class="desc"><p><code><a title="dictionary.write_clean_dictionary" href="#dictionary.write_clean_dictionary">write_clean_dictionary()</a></code> writes the processed dictionary in a file.</p>
 <ul>
-<li><strong>dictionary</strong> (<em>list</em>) : the input dictionary (after processing)</li>
-<li><strong>filename</strong> (<em>str</em>) : the name of the file to open (<code>write</code> mode)</li>
+<li><strong>dictionary</strong> (<em>list</em>): the input dictionary (after processing)</li>
+<li><strong>filename</strong> (<em>str</em>): the name of the file to open (<code>write</code> mode)</li>
 <li><strong>return</strong> (<em>None</em>)</li>
 </ul></div>
 <details class="source">
@@ -593,8 +646,8 @@ An acronyms is a word such as <code>word == word.upper()</code>.</p>
     &#34;&#34;&#34;
     `write_clean_dictionary()` writes the processed dictionary in a file.
 
-    * **dictionary** (*list*) : the input dictionary (after processing)
-    * **filename** (*str*) : the name of the file to open (`write` mode)
+    * **dictionary** (*list*): the input dictionary (after processing)
+    * **filename** (*str*): the name of the file to open (`write` mode)
     * **return** (*None*)
     &#34;&#34;&#34;
     f = open(filename, &#39;w&#39;)
@@ -609,8 +662,8 @@ An acronyms is a word such as <code>word == word.upper()</code>.</p>
 <dd>
 <div class="desc"><p><code><a title="dictionary.write_generated_words" href="#dictionary.write_generated_words">write_generated_words()</a></code> writes the list of generated words in a file.</p>
 <ul>
-<li><strong>word_list</strong> (<em>str</em>) : the string that contain all generated words</li>
-<li><strong>filename</strong> (<em>str</em>) : the name of the file to open (<code>write</code> mode)</li>
+<li><strong>word_list</strong> (<em>str</em>): the string that contain all generated words</li>
+<li><strong>filename</strong> (<em>str</em>): the name of the file to open (<code>write</code> mode)</li>
 <li><strong>return</strong> (<em>None</em>)</li>
 </ul></div>
 <details class="source">
@@ -621,8 +674,8 @@ An acronyms is a word such as <code>word == word.upper()</code>.</p>
     &#34;&#34;&#34;
     `write_generated_words()` writes the list of generated words in a file.
 
-    * **word_list** (*str*) : the string that contain all generated words
-    * **filename** (*str*) : the name of the file to open (`write` mode)
+    * **word_list** (*str*): the string that contain all generated words
+    * **filename** (*str*): the name of the file to open (`write` mode)
     * **return** (*None*)
     &#34;&#34;&#34;
     f = open(filename, &#39;w&#39;)
@@ -646,6 +699,7 @@ An acronyms is a word such as <code>word == word.upper()</code>.</p>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="dictionary.get_alphabet_from_dict" href="#dictionary.get_alphabet_from_dict">get_alphabet_from_dict</a></code></li>
+<li><code><a title="dictionary.get_average_size" href="#dictionary.get_average_size">get_average_size</a></code></li>
 <li><code><a title="dictionary.get_missing_letters" href="#dictionary.get_missing_letters">get_missing_letters</a></code></li>
 <li><code><a title="dictionary.lower_case_words" href="#dictionary.lower_case_words">lower_case_words</a></code></li>
 <li><code><a title="dictionary.open_alphabet" href="#dictionary.open_alphabet">open_alphabet</a></code></li>

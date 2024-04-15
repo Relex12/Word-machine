@@ -1,4 +1,5 @@
 # this dictionary is used when no '--dict' or '-d' options are used
 # it happens when you run `bash test/test-list.txt`
 # or just make sure the install went well
+HelloWorld
 HelloWorld!

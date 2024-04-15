@@ -123,9 +123,9 @@ options:
 
 ## Run the tests
 
-The `test/test-list.txt` file lists unit tests for all option.
+The `test.sh` file lists unit tests for all option.
 
-On Unix, run `bash test/test-list.txt` to run each test, there should be no error.
+On Unix, run `sh test.sh` to run each test, there should be no error.
 
 Note that those are not unit tests, they only verify that every argument to the command line provides an error free execution, but it does not mean that the behavior is correct.
 

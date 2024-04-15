@@ -36,11 +36,11 @@ if __name__ == '__main__':
     parser.add_argument("--no-acronyms", action='store_true', help="remove acronyms from the dictionary")
     parser.add_argument("--no-plural", metavar='LANG', type=str, help="remove plural words from the dictionary")
     parser.add_argument("-g", "--gen", metavar='NUM', type=int, help="generate as many words as specified (option required for every option below)")
-    parser.add_argument("--dim", metavar='NUM', type=int, choices=range(2,3+1), default=3, help="use the specified dimension for the matrix (between 2 and 3)")
+    parser.add_argument("--dim", metavar='NUM', type=int, choices=range(2,6), default=3, help="use the specified dimension for the matrix (between 2 and 3)")
     parser.add_argument("-c", "--capitalize", action='store_true', help="capitalize generated words")
     parser.add_argument("-s", "--size", help="specify the length of generated words. SIZE can be 'NUM' (equals) 'NUM:' (less than) ':NUM' (more than) 'NUM:NUM' (between) or ':' (any)")
     parser.add_argument("-a", "--average-size", metavar='PER', type=int, default=85, choices=range(1,100), help="if no size is specified, length of generated words is determined by the average length in the dictionary, default is 85 percent")
-    parser.add_argument("-p", "--prefix", type=str, help="specify a prefix for all generated words")
+    parser.add_argument("-p", "--prefix", type=str, default='', help="specify a prefix for all generated words")
     parser.add_argument("-n", "--new", action='store_true', help="generate words that are not in the dictionary and not already generated")
     parser.add_argument("-m", "--max-attempts", metavar='NUM', type=int, default=50, help="specify the number of tries to generate a new word before throwing an error")
 
@@ -91,18 +91,13 @@ if __name__ == '__main__':
 
     if args.gen is not None:
 
-        if args.dim == 2:
-            matrix = build_2D_matrix(dictionary, alphabet)
-        else:
-            matrix = build_3D_matrix(dictionary, alphabet)
+        if '' in alphabet:
+            alphabet.remove('')
+        alphabet.append(find_separator(alphabet))
 
+        matrix = build_ND_matrix(dictionary, alphabet, args.dim)
 
-        output_file = args.output is not None
         word_list = []
-
-        prefix = args.prefix is not None
-        if prefix:
-            prefix = args.prefix
 
         # size processing
         min_len = 0
@@ -127,25 +122,32 @@ if __name__ == '__main__':
 
         # word generation
         failed_attempts = 0
+        error = None
         nb_word_to_gen = args.gen
         while len(word_list) != nb_word_to_gen:
-            if args.dim == 2:
-                word = generate_word_2D(matrix, alphabet, prefix)
-            else:
-                word = generate_word_3D(matrix, alphabet, prefix)
+            word = generate_word_ND(matrix, alphabet, args.prefix, args.dim)
             # check word compliancy
-            if args.capitalize:
-                word = word.capitalize()
-            if (min_len <= len(word) and len(word) <= max_len) \
-            and (not args.new or args.new and not word in dictionary) \
-            and not word in word_list :
-                word_list.append(word)
-                failed_attempts = 0
-            else:
+            if len(word) < min_len or max_len < len(word):
                 failed_attempts += 1
                 if failed_attempts >= args.max_attempts:
-                    raise Exception(f"maximum number of attempts exceeded: generation failed {args.max_attempts} times in a raw, maybe check the generation arguments or increase this value with --max-attempts")
+                    error = 'size not compliant'
+            elif args.new and word in dictionary:
+                failed_attempts += 1
+                if failed_attempts >= args.max_attempts:
+                    error = 'word already in dictionary'
+            elif word in word_list:
+                failed_attempts += 1
+                if failed_attempts >= args.max_attempts:
+                    error = 'word already generated'
+            else:
+                word_list.append(word)
+                failed_attempts = 0
 
+            if error is not None:
+                raise Exception(f"maximum number of attempts exceeded: generation failed {args.max_attempts} times in a raw, maybe this value with --max-attempts, last failure due to {error}")
+
+        if args.capitalize:
+            word_list = [word.capitalize() for word in word_list]
 
         column_word_list = [[]]
 
@@ -162,7 +164,7 @@ if __name__ == '__main__':
         for row in column_word_list:
             output_words += "  ".join((val.ljust(width) for val, width in zip(row, col_widths))) + '\n'
 
-        if output_file:
+        if args.output is not None:
             filename = args.output
             write_generated_words(output_words, filename)
         else:

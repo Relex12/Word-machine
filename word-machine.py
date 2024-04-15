@@ -4,12 +4,11 @@
 ## This module allows you to **execute** the code and manages command-line options.
 """
 
-import argparse
+from argparse import ArgumentParser
 from sys import maxsize
 
 from generation import *
 from dictionary import *
-
 
 #############################
 # Main zone : executed code #
@@ -21,7 +20,7 @@ if __name__ == '__main__':
 # Arguments processing #
 ########################
 
-    parser = argparse.ArgumentParser()
+    parser = ArgumentParser()
 
     parser.add_argument("-d", "--dict", metavar='FILE', nargs='*', help="specify the dictionary files")
     parser.add_argument("-g", "--gen", metavar='NUM', type=int, help="generate as many words as specified (option required for every option below)")
@@ -44,7 +43,6 @@ if __name__ == '__main__':
     parser.add_argument("--no-plural", metavar='LANG', type=str, help="remove plural words from the dictionary")
 
     args = parser.parse_args()
-
 
     # getting dictionary
     dictionary = process_dictionary(open_dictionaries(args.dict))
@@ -76,8 +74,6 @@ if __name__ == '__main__':
                 print (missing_letters)
     else:
         alphabet = get_alphabet_from_dict (dictionary)
-
-
 
     if args.write is not None:
         filename = args.write
@@ -143,7 +139,7 @@ if __name__ == '__main__':
                 failed_attempts = 0
 
             if error is not None:
-                raise Exception(f"maximum number of attempts exceeded: generation failed {args.max_attempts} times in a raw, maybe this value with --max-attempts, last failure due to {error}")
+                raise Exception(f"maximum number of attempts exceeded: generation failed {args.max_attempts} times in a raw, maybe increase this value with --max-attempts, last failure due to {error}")
 
         if args.capitalize:
             word_list = [word.capitalize() for word in word_list]

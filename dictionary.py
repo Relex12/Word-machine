@@ -1,9 +1,10 @@
 """
-## This module allows you to **manage** input and output files and to **process** the dictionary.
+## This module allows you to **manage** input and output files and **process** the dictionary.
 """
 
 from statistics import quantiles
 from fractions import Fraction
+from sys import maxsize
 
 ####################################
 # Input and output file management #
@@ -98,9 +99,9 @@ def process_dictionary (dictionary):
     """
     return sorted(set(dictionary))
 
-def get_average_size(dictionary, percent):
+def get_length_range(dictionary, percent):
     """
-    `get_average_size()` gets the minimum and maximum size values for which a percentage of words in dictionary lie between them.
+    `get_length_range()` gets the minimum and maximum size values for which a percentage of words in dictionary lie between them.
 
     * **dictionary** (*list*): the input dictionary (while processing)
     * **percent** (*int*): the percentage of words within the interval 
@@ -114,6 +115,31 @@ def get_average_size(dictionary, percent):
     (a,b)=Fraction(p).limit_denominator(1000).as_integer_ratio()
     (o,n)=(b-a,2*b) if (b-a)%2 == 1 else ((b-a)//2,b)
     return (quantiles(dict_len, n=n)[o-1], quantiles(dict_len, n=n)[-o])
+
+def process_size(size):
+    """
+    `process_size()` converts the size argument to a min_len and max_len couple (tuple length two).
+
+    * **size** (*str*): the input argument value
+    * **return** (*couple*): the minimum and maximum size values
+    """
+    min_len = 0
+    max_len = maxsize
+    if ':' == size:
+        pass
+    elif not ':' in size:
+        min_len = max(int(size), min_len)
+        max_len = min(int(size), max_len)
+    elif size.startswith(':'):
+        max_len = int(size[1:])
+    elif size.endswith(':'):
+        min_len = int(size[:-1])
+    else:
+        min_len = max(int(size.split(':')[0]), min_len)
+        max_len = min(int(size.split(':')[-1]), max_len)
+    if max_len < min_len:
+        raise Exception(f"size value error: {min_len} is greater than {max_len}")
+    return (min_len, max_len)
 
 def remove_missing_letters(dictionary, missing_letters):
     """

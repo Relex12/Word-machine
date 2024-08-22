@@ -34,7 +34,7 @@ def compute_score_ND(word, matrix, alphabet, N):
     * **matrix** (*dict*): the matrix representing the probability of letter chaining each other
     * **alphabet** (*list*): the used alphabet (from input file or from dictionary)
     * **N** (*int*): the dimension of the matrix
-    * **return** (*str*): the score of the word
+    * **return** (*float*): the score of the word
     """
     separator = alphabet[-1]
     word = (N-1)*separator+word+(N-1)*separator

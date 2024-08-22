@@ -63,7 +63,7 @@ def compute_score_ND(word, matrix, alphabet, N):
     * **matrix** (*dict*): the matrix representing the probability of letter chaining each other
     * **alphabet** (*list*): the used alphabet (from input file or from dictionary)
     * **N** (*int*): the dimension of the matrix
-    * **return** (*str*): the score of the word
+    * **return** (*float*): the score of the word
     &#34;&#34;&#34;
     separator = alphabet[-1]
     word = (N-1)*separator+word+(N-1)*separator
@@ -93,7 +93,7 @@ def compute_score_ND(word, matrix, alphabet, N):
 <li><strong>matrix</strong> (<em>dict</em>): the matrix representing the probability of letter chaining each other</li>
 <li><strong>alphabet</strong> (<em>list</em>): the used alphabet (from input file or from dictionary)</li>
 <li><strong>N</strong> (<em>int</em>): the dimension of the matrix</li>
-<li><strong>return</strong> (<em>str</em>): the score of the word</li>
+<li><strong>return</strong> (<em>float</em>): the score of the word</li>
 </ul></div>
 <details class="source">
 <summary>
@@ -107,7 +107,7 @@ def compute_score_ND(word, matrix, alphabet, N):
     * **matrix** (*dict*): the matrix representing the probability of letter chaining each other
     * **alphabet** (*list*): the used alphabet (from input file or from dictionary)
     * **N** (*int*): the dimension of the matrix
-    * **return** (*str*): the score of the word
+    * **return** (*float*): the score of the word
     &#34;&#34;&#34;
     separator = alphabet[-1]
     word = (N-1)*separator+word+(N-1)*separator

@@ -9,6 +9,7 @@ Check out on GitHub
 
 Documentation:
 
+* [`anagram.py`](https://relex12.github.io/Word-machine/doc/anagram.html)
 * [`dictionary.py`](https://relex12.github.io/Word-machine/doc/dictionary.html)
 * [`generation.py`](https://relex12.github.io/Word-machine/doc/generation.html)
 * [`word-machine.py`](https://relex12.github.io/Word-machine/doc/word-machine.html)

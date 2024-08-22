@@ -22,6 +22,7 @@ if __name__ == '__main__':
 
     parser = ArgumentParser()
 
+    parser.add_argument("-a", "--anagram", metavar='STR', type=str, help="give the best anagrams of the specified word")
     parser.add_argument("-d", "--dict", metavar='FILE', nargs='*', help="specify the dictionary files")
     parser.add_argument("-g", "--gen", metavar='NUM', type=int, help="generate as many words as specified (option required for every option below)")
     parser.add_argument("--dim", metavar='NUM', type=int, choices=range(2,6), default=3, help="use the specified dimension for the matrix (between 2 and 3)")
@@ -41,6 +42,14 @@ if __name__ == '__main__':
     parser.add_argument("--print-plural", metavar='LANG', type=str, help="print to sdout the plural words whose singular is in the dictionary (depends on the language only FR is available yet)")
     parser.add_argument("--no-acronyms", action='store_true', help="remove acronyms from the dictionary")
     parser.add_argument("--no-plural", metavar='LANG', type=str, help="remove plural words from the dictionary")
+    ana_group = parser.add_argument_group("anagram arguments")
+    ana_group.add_argument("-w", "--wildcard", metavar='STR', type=str, help="string of characters that can be added to the anagram")
+    ana_group.add_argument("-r", "--repeat", metavar='NUM', type=int, default=1, help="number of times a wildcard character can be used (must be kept really low) (default: %(default)s)")
+    ana_group.add_argument("-v", "--view", metavar='NUM', type=int, default=30, help="number of anagrams displayed (default: %(default)s)")
+    gen_group.add_argument("--match-case", action='store_true', help="give anagrams matching case")
+    ana_group.add_argument("--nb-limit", metavar='NUM', type=int, default=10**8, help="limit on the number of possible anagrams (default: %(default)s)")
+    ana_group.add_argument("--disable-progress-bar", action='store_true', help="disable progress bars during anagrams generation and scoring")
+
 
     args = parser.parse_args()
 
@@ -164,3 +173,41 @@ if __name__ == '__main__':
             write_generated_words(output_words, filename)
         else:
             print (output_words)
+
+    ####################
+    # Getting anagrams #
+    ####################
+
+    if args.anagram is not None:
+
+        word = args.anagram.lower() if not args.match_case else args.anagram
+
+        wildcards = args.repeat*args.wildcard.lower() if not args.match_case else args.repeat*args.wildcard
+        wc_subsets = [str(''.join(str(i) for i in s)) for s in powerset(wildcards)]
+
+        nb_words = 0
+        for s in wc_subsets:
+            nb_words += factorial(len(word+s))
+        if nb_words > args.nb_limit:
+            raise Exception(f"too many combinations error: {nb_words} possible words exeeds {args.nb_limit} limit")
+
+        perms = []
+        for s in wc_subsets:
+            perms.extend(["".join(p) for p in permutations(word+s)])
+            if not args.disable_progress_bar:
+                progress_bar(count=len(perms),total=nb_words)
+        perms = list(set(perms))
+
+        scores = []
+        progress = 0
+        for p in perms:
+            score = compute_score_ND(p, matrix, alphabet, args.dim)
+            if score > 0:
+                scores.append((p, score))
+            progress+=1
+            if not args.disable_progress_bar and ( progress % 100 == 0 or progress == len(perms) ):
+                progress_bar(count=progress,total=len(perms))
+        scores.sort(key=lambda x: x[1])
+
+        for s in scores[-min(args.view, len(scores)):]:
+            print (s[0].capitalize()) if args.capitalize else print (s[0].capitalize())

@@ -88,33 +88,47 @@ se
 Usage and options are given by `./word-machine.py --help`.
 
 ```
-usage: word-machine.py [-h] [-v] [-d [FILE ...]] [-g NUM] [--dim NUM] [-n] [-p PREFIX] [-c] [-s SIZE] [-a PER] [-m NUM] [--alpha FILE] [-w FILE] [-o FILE] [--nb-columns NUM] [-f]
-                       [-l] [--print-acronyms] [--print-plural LANG] [--no-acronyms] [--no-plural LANG]
+usage: word-machine.py [-h] [-g NUM] [-a STR] [-d [FILE [FILE ...]]] [--dim NUM] [-c] [-s SIZE] [-n] [-p PREFIX] [--length-range PERCENT] [--max-attempts NUM] [-w STR] [-r NUM] [-v NUM] [--match-case]
+                       [--nb-limit NUM] [--disable-progress-bar] [--write FILE] [-o FILE] [--nb-columns NUM] [-l] [--alpha FILE] [-f] [--print-acronyms] [--print-plural LANG] [--no-acronyms]
+                       [--no-plural LANG]
 
-options:
+optional arguments:
   -h, --help            show this help message and exit
-  -v, --version         show program's version number and exit
-  -d [FILE ...], --dict [FILE ...]
+  -g NUM, --gen NUM     generate as many words as specified
+  -a STR, --anagram STR
+                        give the best anagrams of the specified word
+  -d [FILE [FILE ...]], --dict [FILE [FILE ...]]
                         specify the dictionary files
-  -g NUM, --gen NUM     generate as many words as specified (option required for every option below)
-  --dim NUM             use the specified dimension for the matrix (between 2 and 3)
+  --dim NUM             use the specified dimension for the matrix (between 2 and 3) (default: 3)
+  -c, --capitalize      capitalize output words
+
+generation arguments:
+  -s SIZE, --size SIZE  specify the length of generated words. SIZE can be 'NUM' (equals) 'NUM:' (less than) ':NUM' (more than) 'NUM:NUM' (between) or ':' (any)
   -n, --new             generate words that are not in the dictionary and not already generated
   -p PREFIX, --prefix PREFIX
                         specify a prefix for all generated words
-  -c, --capitalize      capitalize generated words
-  -s SIZE, --size SIZE  specify the length of generated words. SIZE can be 'NUM' (equals) 'NUM:' (less than) ':NUM' (more than) 'NUM:NUM' (between) or ':' (any)
-  -a PER, --average-size PER
-                        if no size is specified, length of generated words is determined by the average length in the dictionary, default is 85 percent
-  -m NUM, --max-attempts NUM
-                        specify the number of tries to generate a new word before throwing an error
-  --alpha FILE          specify the alphabet file (alphabet is deduced from the dictionary if not specified)
-  -w FILE, --write FILE
-                        write the processed dictionary in the specified file
+  --length-range PERCENT
+                        percentage of words in the dictionary used to get the word length range (if --size not specified) (default: 85)
+  --max-attempts NUM    specify the number of tries to generate a new word before throwing an error (default: 50)
+  --match-case          give anagrams matching case
+
+anagram arguments:
+  -w STR, --wildcard STR
+                        string of characters that can be added to the anagram
+  -r NUM, --repeat NUM  number of times a wildcard character can be used (must be kept really low) (default: 1)
+  -v NUM, --view NUM    number of anagrams displayed (default: 30)
+  --nb-limit NUM        limit on the number of possible anagrams (default: 100000000)
+  --disable-progress-bar
+                        disable progress bars during anagrams generation and scoring
+
+miscellaneous:
+  --write FILE          write the processed dictionary in the specified file
   -o FILE, --output FILE
                         write generated words in the specified file
   --nb-columns NUM      specify the number of columns tu use to display the generated words
-  -f, --force           remove from the dictionary every word with at least one letter not in the alphabet (ignored if --alpha is absent)
   -l, --lowercase       lowercase every word from the dictionary
+  --alpha FILE          specify the alphabet file (alphabet is deduced from the dictionary if not specified)
+  -f, --force           remove from the dictionary every word with at least one letter not in the alphabet (ignored if --alpha is absent)
   --print-acronyms      print acronyms from the dictionary to stdout
   --print-plural LANG   print to sdout the plural words whose singular is in the dictionary (depends on the language only FR is available yet)
   --no-acronyms         remove acronyms from the dictionary

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>generation API documentation</title>
-<meta name="description" content="This module allows you to **build** the matrix from the processed dictionary and to **generate** words." />
+<meta name="description" content="This module allows you to **build** the matrix from the processed dictionary and **generate** words." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,13 +22,13 @@
 <h1 class="title">Module <code>generation</code></h1>
 </header>
 <section id="section-intro">
-<h2 id="this-module-allows-you-to-build-the-matrix-from-the-processed-dictionary-and-to-generate-words">This module allows you to <strong>build</strong> the matrix from the processed dictionary and to <strong>generate</strong> words.</h2>
+<h2 id="this-module-allows-you-to-build-the-matrix-from-the-processed-dictionary-and-generate-words">This module allows you to <strong>build</strong> the matrix from the processed dictionary and <strong>generate</strong> words.</h2>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">&#34;&#34;&#34;
-## This module allows you to **build** the matrix from the processed dictionary and to **generate** words.
+## This module allows you to **build** the matrix from the processed dictionary and **generate** words.
 &#34;&#34;&#34;
 
 from random import choices
@@ -107,121 +107,7 @@ def generate_word_ND(matrix, alphabet, prefix, N):
         if new_letter != separator:
             word = word+new_letter
             previous_letters = previous_letters[1:] + new_letter
-    return (word)
-
-#################
-# /!\ DEAD CODE #
-#################
-
-# def build_2D_matrix(dictionary, alphabet):
-#     &#34;&#34;&#34;
-#     `build_2D_matrix()` initiate and fill a 2D matrix (dict of dict object) by browsing the dictionary.
-
-#     * **dictionary** (*list*): the input dictionary (after processing)
-#     * **alphabet** (*list*): the used alphabet (from input file or from dictionary)
-#     * **return** (*dict*): the matrix representing the probability of letter chaining each other
-#     &#34;&#34;&#34;
-#     # initiate matrix
-#     matrix = dict()
-#     for letter in alphabet:
-#         matrix[letter] = dict()
-#         for other_letter in alphabet:
-#             matrix[letter][other_letter] = 0
-
-#     # fill matrix with dictionary
-#     for word in dictionary:
-#         previous_letter = &#39;&#39;
-#         for current_letter in word:
-#             matrix[previous_letter][current_letter] += 1
-#             previous_letter = current_letter
-#         matrix[word[len(word)-1]][&#39;&#39;] +=1
-#     return matrix
-
-# # def plot_2D_matrix(matrix, alphabet):
-# #     print (alphabet)
-# #     for line in matrix:
-# #         print (line, matrix[line])
-# #         print (&#39;&#39;)
-
-# def generate_word_2D(matrix, alphabet, prefix):
-#     &#34;&#34;&#34;
-#     `generate_word_3D()` generates a word used the `random.choices()` method uppon the 3D matrix in the last letter column.
-
-#     * **matrix** (*dict*): the matrix representing the probability of letter chaining each other
-#     * **alphabet** (*list*): the used alphabet (from input file or from dictionary)
-#     * **prefix** (*str*): the prefix requested for the generated words
-#     * **return** (*str*): the generated word (length variable)
-#     &#34;&#34;&#34;
-#     if len(prefix) == 0:
-#         word = &#39;&#39;
-#         previous_letter = &#39;&#39;
-#     else:
-#         word = prefix
-#         previous_letter = prefix[-1]
-#     new_letter = None
-#     while new_letter != &#39;&#39;:
-#         new_letter = choices(population=alphabet, weights=matrix[previous_letter].values(), k=1)[0]
-#         word = word+new_letter
-#         previous_letter = new_letter
-#     return (word)
-
-# def build_3D_matrix(dictionary, alphabet):
-#     &#34;&#34;&#34;
-#     `build_3D_matrix()` initiate and fill a 3D matrix (dict of dict of dict object) by browsing the dictionary.
-
-#     * **dictionary** (*list*): the input dictionary (after processing)
-#     * **alphabet** (*list*): the used alphabet (from input file or from dictionary)
-#     * **return** (*dict*): the matrix representing the probability of letter chaining each other
-#     &#34;&#34;&#34;
-#     # initiate matrix
-#     matrix = dict()
-#     for letter1 in alphabet:
-#         matrix[letter1] = dict()
-#         for letter2 in alphabet:
-#             matrix[letter1][letter2] = dict()
-#             for letter3 in alphabet:
-#                 matrix[letter1][letter2][letter3] = 0
-
-#     # fill matrix with dictionary
-#     for word in dictionary:
-#         previous_letter1 = &#39;&#39;
-#         previous_letter2 = &#39;&#39;
-#         for current_letter in word:
-#             matrix[previous_letter1][previous_letter2][current_letter] += 1
-#             previous_letter1 = previous_letter2
-#             previous_letter2 = current_letter
-#         matrix[word[len(word)-2]][word[len(word)-1]][&#39;&#39;] +=1
-#         matrix[word[len(word)-1]][&#39;&#39;][&#39;&#39;] +=1
-#     return matrix
-
-# def generate_word_3D(matrix, alphabet, prefix):
-#     &#34;&#34;&#34;
-#     `generate_word_3D()` generates a word used the `random.choices()` method uppon the 3D matrix in the last letter column.
-
-#     * **matrix** (*dict*): the matrix representing the probability of letter chaining each other
-#     * **alphabet** (*list*): the used alphabet (from input file or from dictionary)
-#     * **prefix** (*str*): the prefix requested for the generated words
-#     * **return** (*str*): the generated word (length variable)
-#     &#34;&#34;&#34;
-#     if len(prefix) == 0:
-#         word = &#39;&#39;
-#         previous_letter1 = &#39;&#39;
-#         previous_letter2 = &#39;&#39;
-#     elif len(prefix) == 1:
-#         word = prefix
-#         previous_letter1 = &#39;&#39;
-#         previous_letter2 = prefix[-1]
-#     else:
-#         word = prefix
-#         previous_letter1 = prefix[-2]
-#         previous_letter2 = prefix[-1]
-#     new_letter = None
-#     while new_letter != &#39;&#39;:
-#         new_letter = choices(population=alphabet, weights=matrix[previous_letter1][previous_letter2].values(), k=1)[0]
-#         word = word+new_letter
-#         previous_letter1 = previous_letter2
-#         previous_letter2 = new_letter
-#     return (word)</code></pre>
+    return (word)</code></pre>
 </details>
 </section>
 <section>
@@ -356,7 +242,7 @@ def generate_word_ND(matrix, alphabet, prefix, N):
 <h1>Index</h1>
 <div class="toc">
 <ul>
-<li><a href="#this-module-allows-you-to-build-the-matrix-from-the-processed-dictionary-and-to-generate-words">This module allows you to build the matrix from the processed dictionary and to generate words.</a></li>
+<li><a href="#this-module-allows-you-to-build-the-matrix-from-the-processed-dictionary-and-generate-words">This module allows you to build the matrix from the processed dictionary and generate words.</a></li>
 </ul>
 </div>
 <ul id="index">

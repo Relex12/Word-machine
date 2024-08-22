@@ -34,10 +34,10 @@
 &#34;&#34;&#34;
 
 from argparse import ArgumentParser
-from sys import maxsize
 
-from generation import *
+from anagram import *
 from dictionary import *
+from generation import *
 
 #############################
 # Main zone : executed code #
@@ -45,35 +45,51 @@ from dictionary import *
 
 if __name__ == &#39;__main__&#39;:
 
-########################
-# Arguments processing #
-########################
+    ########################
+    # Arguments processing #
+    ########################
 
     parser = ArgumentParser()
 
+    parser.add_argument(&#34;-g&#34;, &#34;--gen&#34;, metavar=&#39;NUM&#39;, type=int, help=&#34;generate as many words as specified&#34;)
+    parser.add_argument(&#34;-a&#34;, &#34;--anagram&#34;, metavar=&#39;STR&#39;, type=str, help=&#34;give the best anagrams of the specified word&#34;)
     parser.add_argument(&#34;-d&#34;, &#34;--dict&#34;, metavar=&#39;FILE&#39;, nargs=&#39;*&#39;, help=&#34;specify the dictionary files&#34;)
-    parser.add_argument(&#34;-g&#34;, &#34;--gen&#34;, metavar=&#39;NUM&#39;, type=int, help=&#34;generate as many words as specified (option required for every option below)&#34;)
-    parser.add_argument(&#34;--dim&#34;, metavar=&#39;NUM&#39;, type=int, choices=range(2,6), default=3, help=&#34;use the specified dimension for the matrix (between 2 and 3)&#34;)
-    parser.add_argument(&#34;-n&#34;, &#34;--new&#34;, action=&#39;store_true&#39;, help=&#34;generate words that are not in the dictionary and not already generated&#34;)
-    parser.add_argument(&#34;-p&#34;, &#34;--prefix&#34;, type=str, default=&#39;&#39;, help=&#34;specify a prefix for all generated words&#34;)
-    parser.add_argument(&#34;-c&#34;, &#34;--capitalize&#34;, action=&#39;store_true&#39;, help=&#34;capitalize generated words&#34;)
-    parser.add_argument(&#34;-s&#34;, &#34;--size&#34;, help=&#34;specify the length of generated words. SIZE can be &#39;NUM&#39; (equals) &#39;NUM:&#39; (less than) &#39;:NUM&#39; (more than) &#39;NUM:NUM&#39; (between) or &#39;:&#39; (any)&#34;)
-    parser.add_argument(&#34;-a&#34;, &#34;--average-size&#34;, metavar=&#39;PER&#39;, type=int, default=85, choices=range(1,100), help=&#34;if no size is specified, length of generated words is determined by the average length in the dictionary, default is 85 percent&#34;)
-    parser.add_argument(&#34;-m&#34;, &#34;--max-attempts&#34;, metavar=&#39;NUM&#39;, type=int, default=50, help=&#34;specify the number of tries to generate a new word before throwing an error&#34;)
-    parser.add_argument(&#34;--alpha&#34;, metavar=&#39;FILE&#39;, type=str, help=&#34;specify the alphabet file (alphabet is deduced from the dictionary if not specified)&#34;)
-    parser.add_argument(&#34;-w&#34;, &#34;--write&#34;, metavar=&#39;FILE&#39;, type=str, help=&#34;write the processed dictionary in the specified file&#34;)
-    parser.add_argument(&#34;-o&#34;, &#34;--output&#34;, metavar=&#39;FILE&#39;, type=str, help=&#34;write generated words in the specified file&#34;)
-    parser.add_argument(&#34;--nb-columns&#34;, metavar=&#39;NUM&#39;, type=int, default=1, help=&#34;specify the number of columns tu use to display the generated words&#34;)
-    parser.add_argument(&#34;-f&#34;, &#34;--force&#34;, action=&#39;store_true&#39;, help=&#34;remove from the dictionary every word with at least one letter not in the alphabet (ignored if --alpha is absent)&#34;)
-    parser.add_argument(&#34;-l&#34;, &#34;--lowercase&#34;, action=&#39;store_true&#39;, help=&#34;lowercase every word from the dictionary&#34;)
-    parser.add_argument(&#34;--print-acronyms&#34;, action=&#39;store_true&#39;, help=&#34;print acronyms from the dictionary to stdout&#34;)
-    parser.add_argument(&#34;--print-plural&#34;, metavar=&#39;LANG&#39;, type=str, help=&#34;print to sdout the plural words whose singular is in the dictionary (depends on the language only FR is available yet)&#34;)
-    parser.add_argument(&#34;--no-acronyms&#34;, action=&#39;store_true&#39;, help=&#34;remove acronyms from the dictionary&#34;)
-    parser.add_argument(&#34;--no-plural&#34;, metavar=&#39;LANG&#39;, type=str, help=&#34;remove plural words from the dictionary&#34;)
+    parser.add_argument(&#34;--dim&#34;, metavar=&#39;NUM&#39;, type=int, choices=range(2,6), default=3, help=&#34;use the specified dimension for the matrix (between 2 and 3) (default: %(default)s)&#34;)
+    parser.add_argument(&#34;-c&#34;, &#34;--capitalize&#34;, action=&#39;store_true&#39;, help=&#34;capitalize output words&#34;)
+
+    gen_group = parser.add_argument_group(&#34;generation arguments&#34;)
+    gen_group.add_argument(&#34;-s&#34;, &#34;--size&#34;, help=&#34;specify the length of generated words. SIZE can be &#39;NUM&#39; (equals) &#39;NUM:&#39; (less than) &#39;:NUM&#39; (more than) &#39;NUM:NUM&#39; (between) or &#39;:&#39; (any)&#34;)
+    gen_group.add_argument(&#34;-n&#34;, &#34;--new&#34;, action=&#39;store_true&#39;, help=&#34;generate words that are not in the dictionary and not already generated&#34;)
+    gen_group.add_argument(&#34;-p&#34;, &#34;--prefix&#34;, type=str, default=&#39;&#39;, help=&#34;specify a prefix for all generated words&#34;)
+    gen_group.add_argument(&#34;--length-range&#34;, metavar=&#39;PERCENT&#39;, type=int, default=85, choices=range(1,100), help=&#34;percentage of words in the dictionary used to get the word length range (if --size not specified) (default: %(default)s)&#34;)
+    gen_group.add_argument(&#34;--max-attempts&#34;, metavar=&#39;NUM&#39;, type=int, default=50, help=&#34;specify the number of tries to generate a new word before throwing an error (default: %(default)s)&#34;)
+
+    ana_group = parser.add_argument_group(&#34;anagram arguments&#34;)
+    ana_group.add_argument(&#34;-w&#34;, &#34;--wildcard&#34;, metavar=&#39;STR&#39;, type=str, help=&#34;string of characters that can be added to the anagram&#34;)
+    ana_group.add_argument(&#34;-r&#34;, &#34;--repeat&#34;, metavar=&#39;NUM&#39;, type=int, default=1, help=&#34;number of times a wildcard character can be used (must be kept really low) (default: %(default)s)&#34;)
+    ana_group.add_argument(&#34;-v&#34;, &#34;--view&#34;, metavar=&#39;NUM&#39;, type=int, default=30, help=&#34;number of anagrams displayed (default: %(default)s)&#34;)
+    gen_group.add_argument(&#34;--match-case&#34;, action=&#39;store_true&#39;, help=&#34;give anagrams matching case&#34;)
+    ana_group.add_argument(&#34;--nb-limit&#34;, metavar=&#39;NUM&#39;, type=int, default=10**8, help=&#34;limit on the number of possible anagrams (default: %(default)s)&#34;)
+    ana_group.add_argument(&#34;--disable-progress-bar&#34;, action=&#39;store_true&#39;, help=&#34;disable progress bars during anagrams generation and scoring&#34;)
+
+    misc_group = parser.add_argument_group(&#34;miscellaneous&#34;)
+    misc_group.add_argument(&#34;--write&#34;, metavar=&#39;FILE&#39;, type=str, help=&#34;write the processed dictionary in the specified file&#34;)
+    misc_group.add_argument(&#34;-o&#34;, &#34;--output&#34;, metavar=&#39;FILE&#39;, type=str, help=&#34;write generated words in the specified file&#34;)
+    misc_group.add_argument(&#34;--nb-columns&#34;, metavar=&#39;NUM&#39;, type=int, default=1, help=&#34;specify the number of columns tu use to display the generated words&#34;)
+    misc_group.add_argument(&#34;-l&#34;, &#34;--lowercase&#34;, action=&#39;store_true&#39;, help=&#34;lowercase every word from the dictionary&#34;)
+    misc_group.add_argument(&#34;--alpha&#34;, metavar=&#39;FILE&#39;, type=str, help=&#34;specify the alphabet file (alphabet is deduced from the dictionary if not specified)&#34;)
+    misc_group.add_argument(&#34;-f&#34;, &#34;--force&#34;, action=&#39;store_true&#39;, help=&#34;remove from the dictionary every word with at least one letter not in the alphabet (ignored if --alpha is absent)&#34;)
+    misc_group.add_argument(&#34;--print-acronyms&#34;, action=&#39;store_true&#39;, help=&#34;print acronyms from the dictionary to stdout&#34;)
+    misc_group.add_argument(&#34;--print-plural&#34;, metavar=&#39;LANG&#39;, type=str, help=&#34;print to sdout the plural words whose singular is in the dictionary (depends on the language only FR is available yet)&#34;)
+    misc_group.add_argument(&#34;--no-acronyms&#34;, action=&#39;store_true&#39;, help=&#34;remove acronyms from the dictionary&#34;)
+    misc_group.add_argument(&#34;--no-plural&#34;, metavar=&#39;LANG&#39;, type=str, help=&#34;remove plural words from the dictionary&#34;)
 
     args = parser.parse_args()
 
-    # getting dictionary
+    ###################################
+    # Getting dictionary and alphabet #
+    ###################################
+
     dictionary = process_dictionary(open_dictionaries(args.dict))
 
     if args.print_acronyms:
@@ -91,7 +107,6 @@ if __name__ == &#39;__main__&#39;:
     if args.no_plural is not None:
         dictionary = remove_plural_words(dictionary, args.no_plural)
 
-    # getting alphabet
     if args.alpha is not None:
         alphabet = open_alphabet(args.alpha)
         missing_letters = get_missing_letters(dictionary, alphabet)
@@ -113,7 +128,11 @@ if __name__ == &#39;__main__&#39;:
         # build_2D_matrix (matrix_2D, dictionary)
         # plot_2D_matrix(matrix_2D, alphabet)
 
-    if args.gen is not None:
+    ###################
+    # Misc processing #
+    ###################
+
+    if args.gen is not None or args.anagram is not None:
 
         if &#39;&#39; in alphabet:
             alphabet.remove(&#39;&#39;)
@@ -121,28 +140,18 @@ if __name__ == &#39;__main__&#39;:
 
         matrix = build_ND_matrix(dictionary, alphabet, args.dim)
 
-        word_list = []
-
-        # size processing
-        min_len = 0
-        max_len = maxsize
         if args.size is not None:
-            if &#39;:&#39; == args.size:
-                pass
-            elif not &#39;:&#39; in args.size:
-                min_len = max(int(args.size), min_len)
-                max_len = min(int(args.size), max_len)
-            elif args.size.startswith(&#39;:&#39;):
-                max_len = int(args.size[1:])
-            elif args.size.endswith(&#39;:&#39;):
-                min_len = int(args.size[:-1])
-            else:
-                min_len = max(int(args.size.split(&#39;:&#39;)[0]), min_len)
-                max_len = min(int(args.size.split(&#39;:&#39;)[-1]), max_len)
-            if max_len &lt; min_len:
-                raise Exception(f&#34;size value error: {min_len} is greater than {max_len}&#34;)
+            (min_len, max_len) = process_size(args.size)
         else:
-            (min_len, max_len) = get_average_size(dictionary, args.average_size)
+            (min_len, max_len) = get_length_range(dictionary, args.length_range)
+
+    ####################
+    # Generating words #
+    ####################
+
+    if args.gen is not None:
+
+        word_list = []
 
         # word generation
         failed_attempts = 0
@@ -168,7 +177,7 @@ if __name__ == &#39;__main__&#39;:
                 failed_attempts = 0
 
             if error is not None:
-                raise Exception(f&#34;maximum number of attempts exceeded: generation failed {args.max_attempts} times in a raw, maybe this value with --max-attempts, last failure due to {error}&#34;)
+                raise Exception(f&#34;maximum number of attempts exceeded: generation failed {args.max_attempts} times in a raw, maybe increase this value with --max-attempts, last failure due to {error}&#34;)
 
         if args.capitalize:
             word_list = [word.capitalize() for word in word_list]
@@ -192,7 +201,45 @@ if __name__ == &#39;__main__&#39;:
             filename = args.output
             write_generated_words(output_words, filename)
         else:
-            print (output_words)</code></pre>
+            print (output_words)
+
+    ####################
+    # Getting anagrams #
+    ####################
+
+    if args.anagram is not None:
+
+        word = args.anagram.lower() if not args.match_case else args.anagram
+
+        wildcards = args.repeat*args.wildcard.lower() if not args.match_case else args.repeat*args.wildcard
+        wc_subsets = [str(&#39;&#39;.join(str(i) for i in s)) for s in powerset(wildcards)]
+
+        nb_words = 0
+        for s in wc_subsets:
+            nb_words += factorial(len(word+s))
+        if nb_words &gt; args.nb_limit:
+            raise Exception(f&#34;too many combinations error: {nb_words} possible words exeeds {args.nb_limit} limit&#34;)
+
+        perms = []
+        for s in wc_subsets:
+            perms.extend([&#34;&#34;.join(p) for p in permutations(word+s)])
+            if not args.disable_progress_bar:
+                progress_bar(count=len(perms),total=nb_words)
+        perms = list(set(perms))
+
+        scores = []
+        progress = 0
+        for p in perms:
+            score = compute_score_ND(p, matrix, alphabet, args.dim)
+            if score &gt; 0:
+                scores.append((p, score))
+            progress+=1
+            if not args.disable_progress_bar and ( progress % 100 == 0 or progress == len(perms) ):
+                progress_bar(count=progress,total=len(perms))
+        scores.sort(key=lambda x: x[1])
+
+        for s in scores[-min(args.view, len(scores)):]:
+            print (s[0].capitalize()) if args.capitalize else print (s[0].capitalize())</code></pre>
 </details>
 </section>
 <section>

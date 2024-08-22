@@ -36,7 +36,7 @@ if __name__ == '__main__':
     gen_group.add_argument("--max-attempts", metavar='NUM', type=int, default=50, help="specify the number of tries to generate a new word before throwing an error (default: %(default)s)")
 
     ana_group = parser.add_argument_group("anagram arguments")
-    ana_group.add_argument("-w", "--wildcard", metavar='STR', type=str, help="string of characters that can be added to the anagram")
+    ana_group.add_argument("-w", "--wildcard", metavar='STR', type=str, default='', help="string of characters that can be added to the anagram")
     ana_group.add_argument("-r", "--repeat", metavar='NUM', type=int, default=1, help="number of times a wildcard character can be used (must be kept really low) (default: %(default)s)")
     ana_group.add_argument("-v", "--view", metavar='NUM', type=int, default=30, help="number of anagrams displayed (default: %(default)s)")
     gen_group.add_argument("--match-case", action='store_true', help="give anagrams matching case")

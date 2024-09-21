@@ -32,16 +32,16 @@ def open_dictionaries(filenames):
     * **filenames** (*list*): the list of names of files to open (`read` mode)
     * **return** (*list*): the input dictionary
     """
+    # TODO feat: in build_ND_matrix() normalize the matrix upon the number of words in each dict
+
+    dictionary = []
     for filename in filenames:
         f = open(filename, "r")
-        dictionary = f.read().split('\n')
+        dict_file = f.read().split('\n')
         f.close()
-        to_del = []
-        for word in dictionary:
-            if word.startswith('#') or word == '' or word == ' ':
-                to_del.append(word)
-        for word in to_del:
-            dictionary.remove(word)
+        for word in dict_file:
+            if not (word.startswith('#') or word == '' or word == ' '):
+                dictionary.append(word)
     return dictionary
 
 def get_alphabet_from_dict(dictionary):

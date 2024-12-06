@@ -36,6 +36,8 @@ if __name__ == '__main__':
     gen_group.add_argument("--max-attempts", metavar='NUM', type=int, default=50, help="specify the number of tries to generate a new word before throwing an error (default: %(default)s)")
 
     ana_group = parser.add_argument_group("anagram arguments")
+    ana_group.add_argument("-b", "--begin", metavar='STR', type=str, default='', help="first letters of the anagram (like --prefix)")
+    ana_group.add_argument("-e", "--end", metavar='STR', type=str, default='', help="last letters of the anagram")
     ana_group.add_argument("-w", "--wildcard", metavar='STR', type=str, default='', help="string of characters that can be added to the anagram")
     ana_group.add_argument("-r", "--repeat", metavar='NUM', type=int, default=1, help="number of times a wildcard character can be used (must be kept really low) (default: %(default)s)")
     ana_group.add_argument("-v", "--view", metavar='NUM', type=int, default=30, help="number of anagrams displayed (default: %(default)s)")
@@ -191,12 +193,15 @@ if __name__ == '__main__':
         if nb_words > args.nb_limit:
             raise Exception(f"too many combinations error: {nb_words} possible words exeeds {args.nb_limit} limit")
 
+        if not args.match_case:
+            (args.begin, args.end) = (args.begin.lower(), args.end.lower())
+
         perms = []
         for s in wc_subsets:
             perms.extend(["".join(p) for p in permutations(word+s)])
             if not args.disable_progress_bar:
                 progress_bar(count=len(perms),total=nb_words)
-        perms = list(set(perms))
+        perms = [p for p in list(set(perms)) if p.startswith(args.begin) and p.endswith(args.end)]
 
         scores = []
         progress = 0

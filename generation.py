@@ -9,20 +9,6 @@ from itertools import product
 # N dimensions matrix, N-1 letters before #
 ###########################################
 
-separator_list = [' ','\t','-','_',',',';',':','|']
-
-def find_separator(alphabet):
-    """
-    `find_separator()` gets the first char in the list above that is not in the alphabet, if no such character exists, an exception is raised.
-
-    * **alphabet** (*list*): the used alphabet (from input file or from dictionary)
-    * **return** (*char*): the first separator that is not in the alphabet
-    """
-    for s in separator_list:
-        if s not in alphabet:
-            return s
-    raise Exception(f"no separator available: all characters in {separator_list} are in the alphabet, maybe try to add one manually in the code")
-
 def build_ND_matrix(dictionary, alphabet, N):
     """
     `build_ND_matrix()` initiate and fill a N dimension matrix (dict of dict object) by browsing the dictionary.

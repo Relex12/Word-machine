@@ -1,3 +1,6 @@
 dictionaries/
 __pycache__/
 out/
+*.png
+*.jpg
+*.jepg

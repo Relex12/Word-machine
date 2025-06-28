@@ -10,7 +10,21 @@ from sys import maxsize
 # Input and output file management #
 ####################################
 
-def open_alphabet (filename):
+separator_list = [' ','\t','-','_',',',';',':','|']
+
+def find_separator(alphabet):
+    """
+    `find_separator()` gets the first char in the list above that is not in the alphabet, if no such character exists, an exception is raised.
+
+    * **alphabet** (*list*): the used alphabet (from input file or from dictionary)
+    * **return** (*char*): the first separator that is not in the alphabet
+    """
+    for s in separator_list:
+        if s not in alphabet:
+            return s
+    raise Exception(f"no separator available: all characters in {separator_list} are in the alphabet, maybe try to add one manually in the code")
+
+def open_alphabet(filename, add_separator=True):
     """
     `open_alphabet()` gets the input alphabet from a file.
 
@@ -22,7 +36,8 @@ def open_alphabet (filename):
     f.close()
     while '\n' in alphabet:
         alphabet.remove('\n')
-    alphabet.insert(0, '')
+    if add_separator:
+        alphabet.append(find_separator(alphabet))
     return alphabet
 
 def open_dictionaries(filenames):
@@ -44,7 +59,7 @@ def open_dictionaries(filenames):
                 dictionary.append(word)
     return dictionary
 
-def get_alphabet_from_dict(dictionary):
+def get_alphabet_from_dict(dictionary, add_separator=True):
     """
     `get_alphabet_from_dict()` gets the alphabet from the dictionary by adding each used letter.
 
@@ -58,7 +73,8 @@ def get_alphabet_from_dict(dictionary):
                 alphabet.append(letter)
 
     alphabet = list(sorted(set(alphabet)))
-    alphabet.insert(0, '')
+    if add_separator:
+        alphabet.append(find_separator(alphabet))
     return alphabet
 
 def write_clean_dictionary(dictionary, filename):

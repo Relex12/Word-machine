@@ -9,6 +9,7 @@ from argparse import ArgumentParser
 from anagram import *
 from dictionary import *
 from generation import *
+from tokenization import *
 
 #############################
 # Main zone : executed code #
@@ -27,8 +28,10 @@ if __name__ == '__main__':
     parser.add_argument("-d", "--dict", metavar='FILE', nargs='*', help="specify the dictionary files")
     parser.add_argument("--dim", metavar='NUM', type=int, choices=range(2,6), default=3, help="use the specified dimension for the matrix (between 2 and 3) (default: %(default)s)")
     parser.add_argument("-c", "--capitalize", action='store_true', help="capitalize output words")
+    parser.add_argument("--plot", type=str, default="", help="plot the 2D matrix as a diagram")
 
     gen_group = parser.add_argument_group("generation arguments")
+    gen_group.add_argument("-t", "--token", action='store_true', help="use tokenization, slower but better results")
     gen_group.add_argument("-s", "--size", help="specify the length of generated words. SIZE can be 'NUM' (equals) 'NUM:' (less than) ':NUM' (more than) 'NUM:NUM' (between) or ':' (any)")
     gen_group.add_argument("-n", "--new", action='store_true', help="generate words that are not in the dictionary and not already generated")
     gen_group.add_argument("-p", "--prefix", type=str, default='', help="specify a prefix for all generated words")
@@ -90,16 +93,16 @@ if __name__ == '__main__':
                 print ('WARNING: Some characters are used in the dictionary without being in the alphabet')
                 print (missing_letters)
     else:
-        alphabet = get_alphabet_from_dict (dictionary)
+        alphabet = get_alphabet_from_dict(dictionary)
 
     if args.write is not None:
         filename = args.write
         write_clean_dictionary (dictionary, filename)
 
-    # if '--plot' in sys.argv:
-        # matrix_2D = initiate_empty_2D_matrix(alphabet)
-        # build_2D_matrix (matrix_2D, dictionary)
-        # plot_2D_matrix(matrix_2D, alphabet)
+    matrix = None
+    if args.plot != "":
+        matrix = build_ND_matrix(dictionary, alphabet, 2)
+        plot_2D_matrix(matrix, alphabet, args.plot)
 
     ###################
     # Misc processing #
@@ -107,12 +110,8 @@ if __name__ == '__main__':
 
     if args.gen is not None or args.anagram is not None:
 
-		# TODO: these lines should be in the open_alphabet and get_alphabet_from_dict functions
-        if '' in alphabet:
-            alphabet.remove('')
-        alphabet.append(find_separator(alphabet))
-
-        matrix = build_ND_matrix(dictionary, alphabet, args.dim)
+        if matrix is None:
+            matrix = build_ND_matrix(dictionary, alphabet, args.dim)
 
         if args.size is not None:
             (min_len, max_len) = process_size(args.size)
@@ -125,6 +124,42 @@ if __name__ == '__main__':
 
     if args.gen is not None:
 
+        if args.token:
+            if not check_tokenizable(dictionary):
+                raise Exception(f"tokenization impossible, dictionary must contain no digit or uppercase character")
+
+            progress = 0
+            substitute_cache = dict()
+            for substitute in substitute_list:
+
+                matrix = build_2D_substitute_matrix(dictionary, alphabet, substitute_cache)
+
+                if args.plot != "":
+                    plot_2D_matrix(matrix, alphabet, f"out/{substitute}-{args.plot}")
+
+                i, j = find_max(matrix, alphabet)
+                substitute_dict[substitute] = i+j
+                substitute_cache[substitute] = i+j
+
+                # if collision with next substitue, write dictionary
+                matrix[i][j] = 0
+                m, n = find_max(matrix, alphabet)
+                if i == n or j == m:
+                    write_substitute_dictionary(dictionary, substitute_cache, f"out/substitute.txt")
+                    dictionary = process_dictionary(open_dictionaries([f"out/substitute.txt"]))
+                    alphabet = get_alphabet_from_dict(dictionary)
+                    substitute_cache = dict()
+    
+                progress += 1
+                if not args.disable_progress_bar:
+                    progress_bar(count=progress,total=len(substitute_list))
+
+            if '' in alphabet:
+                alphabet.remove('')
+            alphabet.append(find_separator(alphabet))
+
+            matrix = build_ND_matrix(dictionary, alphabet, args.dim)
+
         word_list = []
 
         # word generation
@@ -133,6 +168,8 @@ if __name__ == '__main__':
         nb_word_to_gen = args.gen
         while len(word_list) != nb_word_to_gen:
             word = generate_word_ND(matrix, alphabet, args.prefix, args.dim)
+            if args.token:
+                word = reverse_substitution(word, substitute_dict)
             # check word compliancy
             if len(word) < min_len or max_len < len(word):
                 failed_attempts += 1

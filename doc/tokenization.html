@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 <meta name="generator" content="pdoc3 0.11.0">
-<title>anagram API documentation</title>
-<meta name="description" content="This module allows you to **score** anagrams.">
+<title>tokenization API documentation</title>
+<meta name="description" content="This module allows you to **tokenize** dictionaries for better results.">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
@@ -22,10 +22,10 @@ hljs.highlightAll();
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>anagram</code></h1>
+<h1 class="title">Module <code>tokenization</code></h1>
 </header>
 <section id="section-intro">
-<h2 id="this-module-allows-you-to-score-anagrams">This module allows you to <strong>score</strong> anagrams.</h2>
+<h2 id="this-module-allows-you-to-tokenize-dictionaries-for-better-results">This module allows you to <strong>tokenize</strong> dictionaries for better results.</h2>
 </section>
 <section>
 </section>
@@ -34,31 +34,94 @@ hljs.highlightAll();
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="anagram.compute_score_ND"><code class="name flex">
-<span>def <span class="ident">compute_score_ND</span></span>(<span>word, matrix, alphabet, N)</span>
+<dt id="tokenization.build_2D_substitute_matrix"><code class="name flex">
+<span>def <span class="ident">build_2D_substitute_matrix</span></span>(<span>dictionary, alphabet, substitute_dict)</span>
 </code></dt>
 <dd>
-<div class="desc"><p><code><a title="anagram.compute_score_ND" href="#anagram.compute_score_ND">compute_score_ND()</a></code> compute the score of a word based on a matrix.</p>
+<div class="desc"><p><code><a title="tokenization.build_2D_substitute_matrix" href="#tokenization.build_2D_substitute_matrix">build_2D_substitute_matrix()</a></code> initiate and fill a 2 dimension matrix (dict of dict object) by browsing the dictionary.</p>
 <ul>
-<li><strong>word</strong> (<em>str</em>): the word to score</li>
-<li><strong>matrix</strong> (<em>dict</em>): the matrix representing the probability of letter chaining each other</li>
-<li><strong>alphabet</strong> (<em>list</em>): the used alphabet (from input file or from dictionary)</li>
-<li><strong>N</strong> (<em>int</em>): the dimension of the matrix</li>
-<li><strong>return</strong> (<em>float</em>): the score of the word</li>
+<li><strong>dictionary</strong> (<em>list</em>): the input dictionary (after processing)</li>
+<li><strong>alphabet</strong> (<em>list</em>): the used alphabet (from input file or from dictionary)<ul>
+<li><strong>substitute_dict</strong> (<em>dict</em>): the substituted characters indexed by single substitution character</li>
+</ul>
+</li>
+<li><strong>return</strong> (<em>dict</em>): the matrix representing the probability of letter chaining each other</li>
 </ul></div>
 </dd>
-<dt id="anagram.powerset"><code class="name flex">
-<span>def <span class="ident">powerset</span></span>(<span>iterable)</span>
+<dt id="tokenization.check_tokenizable"><code class="name flex">
+<span>def <span class="ident">check_tokenizable</span></span>(<span>dictionary)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>powerset([1,2,3]) → () (1,) (2,) (3,) (1,2) (1,3) (2,3) (1,2,3)
-copied from: <a href="https://docs.python.org/3/library/itertools.html#itertools-recipes">https://docs.python.org/3/library/itertools.html#itertools-recipes</a></p></div>
+<div class="desc"><p><code><a title="tokenization.check_tokenizable" href="#tokenization.check_tokenizable">check_tokenizable()</a></code> checks if the dictionary contains any word with a digit or an uppercase character.</p>
+<ul>
+<li><strong>dictionary</strong> (<em>list</em>): the input dictionary (after processing)</li>
+<li><strong>return</strong> (<em>bool</em>) False if any digit or uppercase character, True otherwise</li>
+</ul></div>
 </dd>
-<dt id="anagram.progress_bar"><code class="name flex">
-<span>def <span class="ident">progress_bar</span></span>(<span>count, total, size=60, sides='[]', full='#', empty='.', prefix='')</span>
+<dt id="tokenization.find_max"><code class="name flex">
+<span>def <span class="ident">find_max</span></span>(<span>matrix, alphabet)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>copied from: <a href="https://github.com/Relex12/Simple-Progress-Bar">https://github.com/Relex12/Simple-Progress-Bar</a></p></div>
+<div class="desc"><p><code><a title="tokenization.find_max" href="#tokenization.find_max">find_max()</a></code> finds the most frequent character sequence.</p>
+<ul>
+<li><strong>matrix</strong> (<em>dict</em>): the matrix representing the probability of letter chaining each other</li>
+<li><strong>alphabet</strong> (<em>list</em>): the used alphabet (from input file or from dictionary)</li>
+<li><strong>return</strong> (<em>tuple</em>): the most frequent consecutive character sequence</li>
+</ul></div>
+</dd>
+<dt id="tokenization.plot_2D_matrix"><code class="name flex">
+<span>def <span class="ident">plot_2D_matrix</span></span>(<span>matrix, alphabet, filename)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="tokenization.plot_2D_matrix" href="#tokenization.plot_2D_matrix">plot_2D_matrix()</a></code> plot the matrix in a diagram using matplotlib.</p>
+<ul>
+<li><strong>matrix</strong> (<em>dict</em>): the matrix representing the probability of letter chaining each other</li>
+<li><strong>alphabet</strong> (<em>list</em>): the used alphabet (from input file or from dictionary)</li>
+<li><strong>filename</strong> (<em>str</em>): the name of the file to plot in<ul>
+<li><strong>return</strong> (<em>None</em>)</li>
+</ul>
+</li>
+</ul></div>
+</dd>
+<dt id="tokenization.print_2D_matrix"><code class="name flex">
+<span>def <span class="ident">print_2D_matrix</span></span>(<span>matrix, alphabet)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="tokenization.print_2D_matrix" href="#tokenization.print_2D_matrix">print_2D_matrix()</a></code> print the matrix row by row.s</p>
+<ul>
+<li><strong>matrix</strong> (<em>dict</em>): the matrix representing the probability of letter chaining each other</li>
+<li><strong>alphabet</strong> (<em>list</em>): the used alphabet (from input file or from dictionary)<ul>
+<li><strong>return</strong> (<em>None</em>)</li>
+</ul>
+</li>
+</ul></div>
+</dd>
+<dt id="tokenization.reverse_substitution"><code class="name flex">
+<span>def <span class="ident">reverse_substitution</span></span>(<span>word, substitute_dict)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="tokenization.reverse_substitution" href="#tokenization.reverse_substitution">reverse_substitution()</a></code> decode a word from substitute to human readable.</p>
+<ul>
+<li><strong>word</strong> (<em>str</em>): the word to decode back<ul>
+<li><strong>substitute_dict</strong> (<em>dict</em>): the substituted characters indexed by single substitution character</li>
+<li><strong>return</strong> (<em>str</em>): the decoded word</li>
+</ul>
+</li>
+</ul></div>
+</dd>
+<dt id="tokenization.write_substitute_dictionary"><code class="name flex">
+<span>def <span class="ident">write_substitute_dictionary</span></span>(<span>dictionary, substitute_dict, filename)</span>
+</code></dt>
+<dd>
+<div class="desc"><p><code><a title="tokenization.write_substitute_dictionary" href="#tokenization.write_substitute_dictionary">write_substitute_dictionary()</a></code> writes the dictionary in a file with substitutions.</p>
+<ul>
+<li><strong>dictionary</strong> (<em>list</em>): the input dictionary (after processing)<ul>
+<li><strong>substitute_dict</strong> (<em>dict</em>): the substituted characters indexed by single substitution character</li>
+</ul>
+</li>
+<li><strong>filename</strong> (<em>str</em>): the name of the file to open (<code>write</code> mode)</li>
+<li><strong>return</strong> (<em>None</em>)</li>
+</ul></div>
 </dd>
 </dl>
 </section>
@@ -68,15 +131,19 @@ copied from: <a href="https://docs.python.org/3/library/itertools.html#itertools
 <nav id="sidebar">
 <div class="toc">
 <ul>
-<li><a href="#this-module-allows-you-to-score-anagrams">This module allows you to score anagrams.</a></li>
+<li><a href="#this-module-allows-you-to-tokenize-dictionaries-for-better-results">This module allows you to tokenize dictionaries for better results.</a></li>
 </ul>
 </div>
 <ul id="index">
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="anagram.compute_score_ND" href="#anagram.compute_score_ND">compute_score_ND</a></code></li>
-<li><code><a title="anagram.powerset" href="#anagram.powerset">powerset</a></code></li>
-<li><code><a title="anagram.progress_bar" href="#anagram.progress_bar">progress_bar</a></code></li>
+<li><code><a title="tokenization.build_2D_substitute_matrix" href="#tokenization.build_2D_substitute_matrix">build_2D_substitute_matrix</a></code></li>
+<li><code><a title="tokenization.check_tokenizable" href="#tokenization.check_tokenizable">check_tokenizable</a></code></li>
+<li><code><a title="tokenization.find_max" href="#tokenization.find_max">find_max</a></code></li>
+<li><code><a title="tokenization.plot_2D_matrix" href="#tokenization.plot_2D_matrix">plot_2D_matrix</a></code></li>
+<li><code><a title="tokenization.print_2D_matrix" href="#tokenization.print_2D_matrix">print_2D_matrix</a></code></li>
+<li><code><a title="tokenization.reverse_substitution" href="#tokenization.reverse_substitution">reverse_substitution</a></code></li>
+<li><code><a title="tokenization.write_substitute_dictionary" href="#tokenization.write_substitute_dictionary">write_substitute_dictionary</a></code></li>
 </ul>
 </li>
 </ul>

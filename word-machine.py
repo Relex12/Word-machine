@@ -107,6 +107,7 @@ if __name__ == '__main__':
 
     if args.gen is not None or args.anagram is not None:
 
+		# TODO: these lines should be in the open_alphabet and get_alphabet_from_dict functions
         if '' in alphabet:
             alphabet.remove('')
         alphabet.append(find_separator(alphabet))

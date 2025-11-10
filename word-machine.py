@@ -167,9 +167,12 @@ if __name__ == '__main__':
         error = None
         nb_word_to_gen = args.gen
         while len(word_list) != nb_word_to_gen:
-            word = generate_word_ND(matrix, alphabet, args.prefix, args.dim)
             if args.token:
+                prefix = substitution(args.prefix, substitute_dict)
+                word = generate_word_ND(matrix, alphabet, prefix, args.dim)
                 word = reverse_substitution(word, substitute_dict)
+            else:
+                word = generate_word_ND(matrix, alphabet, args.prefix, args.dim)
             # check word compliancy
             if len(word) < min_len or max_len < len(word):
                 failed_attempts += 1

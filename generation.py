@@ -61,6 +61,9 @@ def generate_word_ND(matrix, alphabet, prefix, N):
     new_letter = None
     while new_letter != separator:
         new_letter = choices(population=alphabet, weights=matrix[previous_letters].values(), k=1)[0]
+        # TODO: add a try catch
+        # error example: ./word-machine.py -d pokemon-fr.txt -g 10 -tcn -p arti KeyError: '0M'
+        # issue related to usage of prefix with token, just decode the key and throw an error asking to reduce or change the prefix
         if new_letter != separator:
             word = word+new_letter
             previous_letters = previous_letters[1:] + new_letter

@@ -123,6 +123,25 @@ def write_substitute_dictionary(dictionary, substitute_dict, filename):
     f.close()
 
 
+def substitution(word, substitute_dict):
+	"""`substitution()` encode a word from human readable to substitute.
+
+    * **word** (*str*): the word to encode
+	* **substitute_dict** (*dict*): the substituted characters indexed by single substitution character
+	* **return** (*str*): the encoded word
+	"""
+	substituted_items = substitute_dict.items()
+	substituted_values = substitute_dict.values()
+	while(any(encoded in word for encoded in substituted_values)):
+		copy = word
+		for substitute, encoded in substituted_items:
+			if encoded in copy:
+				copy = copy.replace(encoded, substitute)
+		word = copy
+	return word
+
+
+
 def reverse_substitution(word, substitute_dict):
 	"""`reverse_substitution()` decode a word from substitute to human readable.
 
